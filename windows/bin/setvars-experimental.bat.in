@@ -1,0 +1,2 @@
+SET PYTHONPATH=%PYTHONPATH%;C:\seqan-nightly\co\seqan-Nightly-32\util\py_lib
+SET PATH=%PATH%;c:\MinGW\bin;c:\seqan-nightly\bin;c:\Python2.7

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# We have to use absolute paths since we pushd out of bin.
+
+# This is interpreted by the gcc-wrapper scripts.
+export ARCH=i686
+
+# Set language to be English.
+export LANG=C
+
+# Export the python path to point to the checkout.
+export PYTHONPATH=/home/takifugu2/holtgrew/Nightly/linux64/co/seqan-Nightly-32/util/py_lib
+
+# Make the software in /group/agabi/software/bin visible.
+export PATH=/group/agabi/software/bin:${PATH}
+
+# Add nightly svn wrapper to $PATH.
+export PATH=/home/takifugu/holtgrew/Nightly/bin:${PATH}
+
+# For 32 bit builds, we need 32 bit versions of bzlib and zlib.
+export SEQAN_CMAKE_FIND_ROOT_PATH="/group/agabi/software/i686/bzip-1.0.6;/group/agabi/software/i686/zlib-1.2.5"

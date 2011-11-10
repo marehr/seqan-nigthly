@@ -1,0 +1,12 @@
+# See README.txt for the strategy used in the CMake files.
+cmake_policy (SET CMP0011 NEW)  # Suppress warning about PUSH/POP policy change.
+
+# Copy this file to seqan_win_host.cmake and set the following variables
+# to describe this host.
+
+set (SEQAN_CTEST_ROOT_DIRECTORY "CONFIGURE ME")  # Ex: "c:/seqan-nightly"
+
+SET (SEQAN_CTEST_HOST           "CONFIGURE ME")  # Ex: "example.com", "host.down.under.example.net"
+SET (SEQAN_CTEST_OS             "CONFIGURE ME")  # Ex: "Win7_64bit", "Vista_64Bit", ...
+
+INCLUDE (seqan_win.cmake)

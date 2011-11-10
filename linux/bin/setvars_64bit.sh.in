@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# We have to use absolute paths since we pushd out of bin.
+
+# Set language to be English.
+export LANG=C
+
+# Export the python path to point to the checkout.
+export PYTHONPATH=/home/takifugu2/holtgrew/Nightly/linux64/co/seqan-Nightly-64/util/py_lib
+
+# Make the software in /group/agabi/software/bin visible.
+export PATH=/group/agabi/software/bin:${PATH}
+
+# Add nightly svn wrapper to $PATH.
+export PATH=/home/takifugu/holtgrew/Nightly/bin:${PATH}
