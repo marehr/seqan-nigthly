@@ -13,3 +13,6 @@ export PATH=/group/agabi/software/bin:${PATH}
 
 # Add nightly svn wrapper to $PATH.
 export PATH=/home/takifugu/holtgrew/Nightly/bin:${PATH}
+
+# Enable parallel builds.
+#export SEQAN_CTEST_BUILD_FLAGS="-j8"

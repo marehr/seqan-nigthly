@@ -19,3 +19,6 @@ export PATH=/home/takifugu/holtgrew/Nightly/bin:${PATH}
 
 # For 32 bit builds, we need 32 bit versions of bzlib and zlib.
 export SEQAN_CMAKE_FIND_ROOT_PATH="/group/agabi/software/i686/bzip-1.0.6;/group/agabi/software/i686/zlib-1.2.5"
+
+# Enable parallel builds.
+#export SEQAN_CTEST_BUILD_FLAGS="-j8"
