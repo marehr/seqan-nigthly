@@ -3,10 +3,15 @@
 # We have to use absolute paths since we pushd out of bin.
 
 # This is interpreted by the gcc-wrapper scripts.
-export ARCH=i686
+#export ARCH=i686
 
-# Set language to be English.
+# Set language and locale to C so we do not get UTF-8 quote marks
+# that are then botched up by CDash.
 export LANG=C
+export LC_ALL=C
+
+# Add flags to suppress missing OpenMP warning in nightly builds.
+export CXXFLAGS="${CXXFLAGS} -DSEQAN_IGNORE_MISSING_OPENMP=1"
 
 # Export the python path to point to the checkout.
 export PYTHONPATH=/home/takifugu2/holtgrew/Nightly/linux64/co/seqan-Nightly-32/util/py_lib
@@ -18,7 +23,7 @@ export PATH=/group/agabi/software/bin:${PATH}
 export PATH=/home/takifugu/holtgrew/Nightly/bin:${PATH}
 
 # For 32 bit builds, we need 32 bit versions of bzlib and zlib.
-export SEQAN_CMAKE_FIND_ROOT_PATH="/group/agabi/software/i686/bzip-1.0.6;/group/agabi/software/i686/zlib-1.2.5"
+export SEQAN_CMAKE_FIND_ROOT_PATH="/lib32;/usr/lib32"
 
 # Enable parallel builds.
 #export SEQAN_CTEST_BUILD_FLAGS="-j8"

@@ -2,8 +2,13 @@
 
 # We have to use absolute paths since we pushd out of bin.
 
-# Set language to be English.
+# Set language and locale to C so we do not get UTF-8 quote marks
+# that are then botched up by CDash.
 export LANG=C
+export LC_ALL=C
+
+# Add flags to suppress missing OpenMP warning in nightly builds.
+export CXXFLAGS="${CXXFLAGS} -DSEQAN_IGNORE_MISSING_OPENMP=1"
 
 # Export the python path to point to the checkout.
 export PYTHONPATH=/home/takifugu2/holtgrew/Nightly/linux64/co/seqan-Nightly-64/util/py_lib
