@@ -17,7 +17,9 @@ CXX="clang++-2.9" ctest -S seqan_linux_host.cmake,Nightly -VV -d 2>&1 | tee ${DI
 CXX="clang++-3.0" ctest -S seqan_linux_host.cmake,Nightly -VV -d 2>&1 | tee ${DIR}/../log/ctest_nightly_clang++-3.0-64.log
 CXX="clang++-3.1" ctest -S seqan_linux_host.cmake,Nightly -VV -d 2>&1 | tee ${DIR}/../log/ctest_nightly_clang++-3.1-64.log
 CXX="clang++-trunk" ctest -S seqan_linux_host.cmake,Nightly -VV -d 2>&1 | tee ${DIR}/../log/ctest_nightly_clang++-trunk-64.log
+#CXX="clang++-trunk -std=c++0x" ctest -S seqan_linux_host.cmake,Nightly -VV -d 2>&1 | tee ${DIR}/../log/ctest_nightly_clang++-trunk-64-c++11.log
 CXX="g++-4.6" ctest -S seqan_linux_host.cmake,NightlyCoverage -VV -d 2>&1 | tee ${DIR}/../log/ctest_nightly_g++-4.6-64-coverage.log
 CXX="g++-4.6" ctest -S seqan_linux_host.cmake,NightlyMemCheck -VV -d 2>&1 | tee ${DIR}/../log/ctest_nightly_g++-4.6-64-memcheck.log
+CXX="g++-4.7 -std=c++11" ctest -S seqan_linux_host.cmake,Nightly -VV -d 2>&1 | tee ${DIR}/../log/ctest_nightly_g++-4.7-64-c++11.log
 popd
 
