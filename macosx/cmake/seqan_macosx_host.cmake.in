@@ -1,0 +1,23 @@
+# See README.txt for the strategy used in the CMake files.
+cmake_policy (SET CMP0011 NEW)  # Suppress warning about PUSH/POP policy change.
+
+# Copy this file to seqan_win_host.cmake and set the following variables
+# to describe this host.
+
+# TODO(holtgrew): This could also be moved into the seqan_linux.cmake file.
+if (NOT "$ENV{SEQAN_CTEST_BUILD_FLAGS}x" STREQUAL "x")
+  set (CTEST_BUILD_FLAGS "$ENV{SEQAN_CTEST_BUILD_FLAGS}")
+endif (NOT "$ENV{SEQAN_CTEST_BUILD_FLAGS}x" STREQUAL "x")
+
+set (SEQAN_CTEST_ROOT_DIRECTORY "CONFIGURE ME")  # Ex: "/home/takifugu2/holtgrew/Nightly/linux64"
+
+# TODO(holtgrew): This could also be moved into the seqan_linux.cmake file.
+if (NOT "$ENV{SEQAN_CMAKE_FIND_ROOT_PATH}x" STREQUAL "x")
+  set (SEQAN_CMAKE_FIND_ROOT_PATH "$ENV{SEQAN_CMAKE_FIND_ROOT_PATH}")
+endif (NOT "$ENV{SEQAN_CMAKE_FIND_ROOT_PATH}x" STREQUAL "x")
+
+SET (SEQAN_CTEST_GENERATOR      "CONFIGURE ME")  # Ex: "Unix Makefiles"
+SET (SEQAN_CTEST_HOST           "CONFIGURE ME")  # Ex: "example.com", "host.down.under.example.net"
+SET (SEQAN_CTEST_OS             "CONFIGURE ME")  # Ex: "linux-3.0_64bit"
+
+INCLUDE (seqan_linux.cmake)
