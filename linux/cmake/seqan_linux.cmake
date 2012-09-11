@@ -33,11 +33,11 @@ endif (SEQAN_CTEST_OS MATCHES ".*32bit")
 set (SEQAN_CTEST_CXX_PTRWIDTH ${SEQAN_CTEST_OS_PTRWIDTH})
 
 if (NOT WIN32)
-  if ("$ENV{CXX}" MATCHES ".* -m32")
+  if ("$ENV{CXX}" MATCHES ".* -m32.*")
     set (SEQAN_CTEST_CXX_PTRWIDTH "32")
-  else ("$ENV{CXX}" MATCHES ".* -m32")
+  else ("$ENV{CXX}" MATCHES ".* -m32.*")
     set (SEQAN_CTEST_CXX_PTRWIDTH "64")
-  endif ("$ENV{CXX}" MATCHES ".* -m32")
+  endif ("$ENV{CXX}" MATCHES ".* -m32.*")
 endif (NOT WIN32)
 
 # The environment variable ARCH is interpreted by the compiler wrapper scripts.
@@ -53,6 +53,20 @@ message (STATUS "SEQAN_CTEST_OS_PTRWIDTH is  ${SEQAN_CTEST_OS_PTRWIDTH}")
 message (STATUS "SEQAN_CTEST_CXX_PTRWIDTH is ${SEQAN_CTEST_CXX_PTRWIDTH}")
 
 # ---------------------------------------------------------------------------
+# Set SEQAN_CTEST_CXX_STANDARD_VERSION from $ENV{CXX}.
+# ---------------------------------------------------------------------------
+
+if (NOT WIN32)
+  if ("$ENV{CXX}" MATCHES ".*-std=c\\+\\+11.*")
+    set (SEQAN_CTEST_CXX_VERSION "c++11")
+    set (SEQAN_CTEST_CXX_VERSION_STR "-c++11") # placed in compiler verison
+  else ("$ENV{CXX}" MATCHES ".*-std=c\\+\\+11.*")
+    set (SEQAN_CTEST_CXX_VERSION "c++98")
+    set (SEQAN_CTEST_CXX_VERSION_LABEL "")  # don't show in CDash
+  endif ("$ENV{CXX}" MATCHES ".*-std=c\\+\\+11.*")
+endif (NOT WIN32)
+
+# ---------------------------------------------------------------------------
 # Get SEQAN_CTEST_MODEL from command args.
 # ---------------------------------------------------------------------------
 
@@ -61,7 +75,17 @@ if (${CTEST_SCRIPT_ARG} MATCHES Experimental)
     set (SEQAN_CTEST_MODEL Experimental)
 elseif (${CTEST_SCRIPT_ARG} MATCHES Continuous)
     set (SEQAN_CTEST_MODEL Continuous)
+elseif (${CTEST_SCRIPT_ARG} MATCHES NightlyCoverage)
+    set (SEQAN_CTEST_MODEL NightlyCoverage)
+elseif (${CTEST_SCRIPT_ARG} MATCHES ExperimentalCoverage)
+    set (SEQAN_CTEST_MODEL ExperimentalCoverage)
+elseif (${CTEST_SCRIPT_ARG} MATCHES NightlyMemCheck)
+    set (SEQAN_CTEST_MODEL NightlyMemCheck)
+elseif (${CTEST_SCRIPT_ARG} MATCHES ExperimentalMemCheck)
+    set (SEQAN_CTEST_MODEL ExperimentalMemCheck)
 endif (${CTEST_SCRIPT_ARG} MATCHES Experimental)
+set (MODEL ${SEQAN_CTEST_MODEL})
+
 message (STATUS "SEQAN_CTEST_MODEL is           ${SEQAN_CTEST_MODEL}")
 
 # ---------------------------------------------------------------------------
@@ -145,7 +169,7 @@ set (CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 1000)
 # ------------------------------------------------------------
 
 set (CTEST_SITE       "${SEQAN_CTEST_HOST}")
-set (CTEST_BUILD_NAME "${SEQAN_CTEST_OS}-${SEQAN_CTEST_GENERATOR_SHORT}-${SEQAN_CTEST_CXX_PTRWIDTH}")
+set (CTEST_BUILD_NAME "${SEQAN_CTEST_OS}-${SEQAN_CTEST_GENERATOR_SHORT}-${SEQAN_CTEST_CXX_PTRWIDTH}${SEQAN_CTEST_CXX_VERSION_STR}${SEQAN_BUILD_SUFFIX}")
 
 # This project name is used for the CDash submission.
 SET (CTEST_PROJECT_NAME "SeqAn")
@@ -176,7 +200,7 @@ set (CTEST_CMAKE_COMMAND cmake)
 find_program (CTEST_SVN_COMMAND
               NAMES svn
               HINTS "C:/Program Files/TortoiseSVN/bin")
-set (CTEST_CHECKOUT_COMMAND "${CTEST_SVN_COMMAND} co https://nightly@svn.mi.fu-berlin.de/seqan/trunk/seqan ${CTEST_SOURCE_DIRECTORY}")
+set (CTEST_CHECKOUT_COMMAND "${CTEST_SVN_COMMAND} co http://svn.mi.fu-berlin.de/seqan/trunk/seqan ${CTEST_SOURCE_DIRECTORY}")
 set (CTEST_UPDATE_COMMAND ${CTEST_SVN_COMMAND})
 
 # ------------------------------------------------------------
@@ -252,7 +276,7 @@ set (SEQAN_CTEST_ENVIRONMENT "")
 # Copy ARCH from current environment variable such that the gcc-wrapper scripts
 # pick the correct version.
 if (NOT "$ENV{ARCH}x" STREQUAL "x")
-  message("set (SEQAN_CTEST_ENVIRONMENT \"ARCH=$ENV{ARCH}\" ${SEQAN_CTEST_ENVIRONMENT})")
+  #message("set (SEQAN_CTEST_ENVIRONMENT \"ARCH=$ENV{ARCH}\" ${SEQAN_CTEST_ENVIRONMENT})")
   set (SEQAN_CTEST_ENVIRONMENT "ARCH=$ENV{ARCH}" ${SEQAN_CTEST_ENVIRONMENT})
 endif (NOT "$ENV{ARCH}x" STREQUAL "x")
 
@@ -270,11 +294,11 @@ CTEST_START (${SEQAN_CTEST_MODEL})
 # at the first time and will fail.
 CONFIGURE_FILE (${CTEST_SOURCE_DIRECTORY}/util/cmake/CTestConfig.cmake
                 ${CTEST_SOURCE_ROOT_DIRECTORY}/CTestConfig.cmake
-				COPYONLY)
+                COPYONLY)
 
 # Update from repository, configure, build, test, submit.  These commands will
 # get all necessary information from the CTEST_* variables set above.
-#CTEST_UPDATE    (RETURN_VALUE VAL)
+CTEST_UPDATE    (RETURN_VALUE VAL)
 CTEST_CONFIGURE ()
 CTEST_BUILD     ()
 CTEST_TEST      ()
