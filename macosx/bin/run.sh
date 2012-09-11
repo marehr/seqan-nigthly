@@ -8,23 +8,24 @@ mode=nightly
 PLATFORM=macosx
 
 # Parse command line options.
-while getopts hvo: OPT; do
-    case "$OPT" in
-        h)
+while [ $# -gt 0 ]
+do
+    case "$1" in
+        -h)
             echo $USAGE
             exit 0
             ;;
-        32)
+        -32)
             BITS=32
             COMPILER_FLAGS="-m 32"
             ;;
-        experimental)
+        -experimental)
             MODE=Experimental
             mode=experimental
             ;;
     esac
+    shift
 done
-
 
 . ${DIR}/setvars_${BITS}bit.sh
 mkdir -p ${DIR}/../log
@@ -32,7 +33,7 @@ pushd ${DIR}/../cmake
 
 for COMPILER in $COMPILERS
 do
-  CXX="${COMPILER} ${COMPILER_FLAGS}" ctest -S seqan_${PLATFORM}_host.cmake,${MODE} -VV -d 2>&1 | tee ${DIR}/../log/ctest_${mode}_${COMPILER}-${BITS}.log
+    CXX="${COMPILER} ${COMPILER_FLAGS}" ctest -S seqan_${PLATFORM}_host.cmake,${MODE} -VV -d 2>&1 | tee ${DIR}/../log/ctest_${mode}_${COMPILER}-${BITS}.log
 done
 
 #CXX="clang++-trunk -std=c++0x" ctest -S seqan_${PLATFORM}_host.cmake,${MODE} -VV -d 2>&1 | tee ${DIR}/../log/ctest_${mode}_clang++-trunk-64-c++11.log
