@@ -14,7 +14,7 @@ export COMPILERS="g++-apple-4.2 g++-mp-4.4 g++-mp-4.5 g++-mp-4.6 g++-mp-4.7 clan
 export CXXFLAGS="${CXXFLAGS} -DSEQAN_IGNORE_MISSING_OPENMP=1"
 
 # Export the python path to point to the checkout.
-export PYTHONPATH=/Users/weese/Documents/Development/Nightly/seqan-trunk/util/py_lib
+export PYTHONPATH=$ENV{HOME}/Documents/Development/Nightly/seqan-trunk/util/py_lib
 
 # Make the software in /group/agabi/software/bin visible.
 export PATH=/opt/local/bin:/opt/local/sbin:/usr/local/cuda/bin:$PATH
