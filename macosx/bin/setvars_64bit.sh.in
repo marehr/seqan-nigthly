@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# We have to use absolute paths since we pushd out of bin.
+
+# Set language and locale to C so we do not get UTF-8 quote marks
+# that are then botched up by CDash.
+export LANG=C
+export LC_ALL=C
+
+# Set the list of available compilers
+export COMPILERS="g++-apple-4.2 g++-mp-4.4 g++-mp-4.5 g++-mp-4.6 g++-mp-4.7 clang++-mp-3.0 clang++"
+
+# Add flags to suppress missing OpenMP warning in nightly builds.
+export CXXFLAGS="${CXXFLAGS} -DSEQAN_IGNORE_MISSING_OPENMP=1"
+
+# Export the python path to point to the checkout.
+export PYTHONPATH=/Users/weese/Documents/Development/Nightly/seqan-trunk/util/py_lib
+
+# Make the software in /group/agabi/software/bin visible.
+export PATH=/opt/local/bin:/opt/local/sbin:/usr/local/cuda/bin:$PATH
+
+# Add nightly svn wrapper to $PATH.
+#export PATH=/home/takifugu/holtgrew/Nightly/bin:${PATH}
+
+# Enable parallel builds.
+#export SEQAN_CTEST_BUILD_FLAGS="-j2"
