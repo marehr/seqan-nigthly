@@ -179,8 +179,8 @@ SET (CTEST_PROJECT_NAME "SeqAn")
 # ------------------------------------------------------------
 
 # The SVN checkout goes here.
-set (CTEST_SOURCE_ROOT_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/co/seqan-${SEQAN_CTEST_MODEL}-${SEQAN_CTEST_CXX_PTRWIDTH}")
-set (CTEST_SOURCE_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/co/seqan-${SEQAN_CTEST_MODEL}-${SEQAN_CTEST_CXX_PTRWIDTH}")
+set (CTEST_SOURCE_ROOT_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/co/seqan-${SEQAN_CTEST_MODEL}")
+set (CTEST_SOURCE_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/co/seqan-${SEQAN_CTEST_MODEL}")
 
 # Set build directory and directory to run tests in.
 set (CTEST_BINARY_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/build/${CTEST_BUILD_NAME}")
@@ -287,6 +287,8 @@ message("set (CTEST_ENVIRONMENT ${SEQAN_CTEST_ENVIRONMENT})")
 # Perform the actual tests.
 # ------------------------------------------------------------
 
+## -- Start
+message(" -- Start dashboard ${SEQAN_CTEST_MODEL} - ${CTEST_BUILD_NAME} --")
 CTEST_START (${SEQAN_CTEST_MODEL})
 
 # Copying the CTestConfig.cmake here is not optimal.  You might have to call
@@ -298,6 +300,7 @@ CONFIGURE_FILE (${CTEST_SOURCE_DIRECTORY}/util/cmake/CTestConfig.cmake
 
 # Update from repository, configure, build, test, submit.  These commands will
 # get all necessary information from the CTEST_* variables set above.
+message(" -- Update ${SEQAN_CTEST_MODEL} - ${CTEST_BUILD_NAME} --")
 CTEST_UPDATE    (RETURN_VALUE VAL)
 CTEST_CONFIGURE ()
 CTEST_BUILD     ()
