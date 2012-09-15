@@ -1,3 +1,3 @@
 #!/bin/bash
 
-. $(dirname $0)/run.sh --32 --experimental
+. $(dirname $0)/run.sh -32 -experimental

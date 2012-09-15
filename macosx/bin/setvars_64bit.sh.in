@@ -8,7 +8,7 @@ export LANG=C
 export LC_ALL=C
 
 # Set the list of available compilers
-export COMPILERS="g++-apple-4.2 g++-mp-4.4 g++-mp-4.5 g++-mp-4.6 g++-mp-4.7 clang++-mp-3.0 clang++"
+export COMPILERS="g++-apple-4.2 g++-mp-4.4 g++-mp-4.5 g++-mp-4.6 g++-mp-4.7 g++-mp-4.8 clang++-mp-2.9 clang++-mp-3.0 clang++-mp-3.1 clang++-mp-3.2"
 
 # Add flags to suppress missing OpenMP warning in nightly builds.
 export CXXFLAGS="${CXXFLAGS} -DSEQAN_IGNORE_MISSING_OPENMP=1"
