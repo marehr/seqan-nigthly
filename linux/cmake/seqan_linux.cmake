@@ -200,7 +200,7 @@ set (CTEST_CMAKE_COMMAND cmake)
 find_program (CTEST_SVN_COMMAND
               NAMES svn
               HINTS "C:/Program Files/TortoiseSVN/bin")
-set (CTEST_CHECKOUT_COMMAND "${CTEST_SVN_COMMAND} co http://svn.mi.fu-berlin.de/seqan/trunk/seqan ${CTEST_SOURCE_DIRECTORY}")
+set (CTEST_CHECKOUT_COMMAND "${CTEST_SVN_COMMAND} co http://svn.seqan.de/seqan/trunk ${CTEST_SOURCE_DIRECTORY}")
 set (CTEST_UPDATE_COMMAND ${CTEST_SVN_COMMAND})
 
 # ------------------------------------------------------------
@@ -282,6 +282,22 @@ endif (NOT "$ENV{ARCH}x" STREQUAL "x")
 
 set (CTEST_ENVIRONMENT ${SEQAN_CTEST_ENVIRONMENT})
 message("set (CTEST_ENVIRONMENT ${SEQAN_CTEST_ENVIRONMENT})")
+
+# ------------------------------------------------------------
+# Suppress certain warnings.
+# ------------------------------------------------------------
+
+# Of course, the following list should be kept as short as possible and should
+# be limited to very small lists of system/compiler pairs.  However, some
+# warnings cannot be suppressed from the source.  Also, the warnings
+# suppressed here should be specific to certain system/compiler versions.
+#
+# If you add anything then document what it does.
+
+set (CTEST_CUSTOM_WARNING_EXCEPTION
+    # Suppress warnings about slow 64 bit atomic intrinsics.
+    "compatibility.h:166: note:.*pragma message: slow.*64"
+    "compatibility.h:304: note:.*pragma message: slow.*64")
 
 # ------------------------------------------------------------
 # Perform the actual tests.
