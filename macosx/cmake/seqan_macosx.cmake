@@ -200,7 +200,7 @@ set (CTEST_CMAKE_COMMAND cmake)
 find_program (CTEST_SVN_COMMAND
               NAMES svn
               HINTS "C:/Program Files/TortoiseSVN/bin")
-set (CTEST_CHECKOUT_COMMAND "${CTEST_SVN_COMMAND} co http://svn.mi.fu-berlin.de/seqan/trunk/seqan ${CTEST_SOURCE_DIRECTORY}")
+set (CTEST_CHECKOUT_COMMAND "${CTEST_SVN_COMMAND} co http://svn.seqan.de/seqan/trunk ${CTEST_SOURCE_DIRECTORY}")
 set (CTEST_UPDATE_COMMAND ${CTEST_SVN_COMMAND})
 
 # ------------------------------------------------------------
