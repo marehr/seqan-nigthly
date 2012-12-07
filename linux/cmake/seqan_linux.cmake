@@ -203,6 +203,11 @@ find_program (CTEST_SVN_COMMAND
 set (CTEST_CHECKOUT_COMMAND "${CTEST_SVN_COMMAND} co http://svn.seqan.de/seqan/trunk ${CTEST_SOURCE_DIRECTORY}")
 set (CTEST_UPDATE_COMMAND ${CTEST_SVN_COMMAND})
 
+# Use parallel make.
+if (NOT WIN32)
+    set (CTEST_BUILD_FLAGS -j4)
+endif (NOT WIN32)
+
 # ------------------------------------------------------------
 # Find memcheck and coverage programs.
 # ------------------------------------------------------------

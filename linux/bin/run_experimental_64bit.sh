@@ -13,7 +13,7 @@ CXX="g++-4.5" ctest -S seqan_linux_host.cmake,Experimental -VV -d 2>&1 | tee ${D
 CXX="g++-4.6" ctest -S seqan_linux_host.cmake,Experimental -VV -d 2>&1 | tee ${DIR}/../log/ctest_experimental_g++-4.6-64.log
 CXX="g++-4.7" ctest -S seqan_linux_host.cmake,Experimental -VV -d 2>&1 | tee ${DIR}/../log/ctest_experimental_g++-4.7-64.log
 CXX="g++-4.7 -std=c++11" ctest -S seqan_linux_host.cmake,Experimental -VV -d 2>&1 | tee ${DIR}/../log/ctest_experimental_g++-4.7-64-c++11.log
-CXX="clang++-2.9" ctest -S seqan_linux_host.cmake,Experimental -VV -d 2>&1 | tee ${DIR}/../log/ctest_experimental_clang++-2.9-64.log
+#CXX="clang++-2.9" ctest -S seqan_linux_host.cmake,Experimental -VV -d 2>&1 | tee ${DIR}/../log/ctest_experimental_clang++-2.9-64.log
 CXX="clang++-3.0" ctest -S seqan_linux_host.cmake,Experimental -VV -d 2>&1 | tee ${DIR}/../log/ctest_experimental_clang++-3.0-64.log
 CXX="clang++-3.1" ctest -S seqan_linux_host.cmake,Experimental -VV -d 2>&1 | tee ${DIR}/../log/ctest_experimental_clang++-3.1-64.log
 CXX="clang++-trunk" ctest -S seqan_linux_host.cmake,Experimental -VV -d 2>&1 | tee ${DIR}/../log/ctest_experimental_clang++-trunk-64.log
