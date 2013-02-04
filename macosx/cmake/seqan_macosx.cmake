@@ -302,6 +302,7 @@ set (CTEST_CUSTOM_WARNING_EXCEPTION
     # influence this.
     ".*boost.*warning: unused parameter.*"
     ".*boost.*warning: no newline at end of file.*"
+    ".*constants.hpp:186:61: note: expanded from.*"
     )
 
 # ------------------------------------------------------------
