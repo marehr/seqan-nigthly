@@ -183,10 +183,28 @@ CTEST_EMPTY_BINARY_DIRECTORY (${CTEST_BINARY_DIRECTORY})
 #   CMAKE_BUILD_TYPE -- The build type.  We set this to Release since
 #     the compiler tries its best to understand the code and unearths
 #     some warning types only in this build type.
+#   CMAKE_CXX_FLAGS -- Enable project-parallel build.
 file (WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "
 CMAKE_BUILD_TYPE:STRING=${CTEST_BUILD_CONFIGURATION}
 CMAKE_GENERATOR:INTERNAL=${CTEST_CMAKE_GENERATOR}
 ")
+#CMAKE_CXX_FLAGS=/M4
+
+# ------------------------------------------------------------
+# Suppress certain warnings.
+# ------------------------------------------------------------
+
+# Of course, the following list should be kept as short as possible and should
+# be limited to very small lists of system/compiler pairs.  However, some
+# warnings cannot be suppressed from the source.  Also, the warnings
+# suppressed here should be specific to certain system/compiler versions.
+#
+# If you add anything then document what it does.
+
+set (CTEST_CUSTOM_WARNING_EXCEPTION
+    # Suppress warnings about slow 64 bit atomic intrinsics.
+    "compatibility.h:166: note:.*pragma message: slow.*64"
+    "compatibility.h:304: note:.*pragma message: slow.*64")
 
 # ------------------------------------------------------------
 # Perform the actual tests.
