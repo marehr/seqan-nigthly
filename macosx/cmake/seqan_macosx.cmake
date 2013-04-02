@@ -1,4 +1,4 @@
-# Automated CTest Builds -- Workhorse File
+
 #
 # Do not define any new CTEST_* variables, prefix them with SEQAN!
 #
@@ -122,13 +122,13 @@ else (WIN32)
     message (FATAL_ERROR "Environment variable CXX not set.  Cannot determine compiler.")
   endif ("$ENV{CXX}x" STREQUAL "x")
 
-  if ("$ENV{CXX}" MATCHES ".*(clang\\+\\+-.*)")
-    STRING (REGEX REPLACE ".*(clang\\+\\+-[^ ]*).*" "\\1" SEQAN_CTEST_GENERATOR_SHORT "$ENV{CXX}")
-  elseif ("$ENV{CXX}" MATCHES ".*g\\+\\+-.*")
-    STRING (REGEX REPLACE ".*(g\\+\\+-[^ ]*).*" "\\1" SEQAN_CTEST_GENERATOR_SHORT "$ENV{CXX}")
-  else ("$ENV{CXX}" MATCHES ".*(clang\\+\\+-.*)")
+  if ("$ENV{CXX}" MATCHES ".*(clang\\+\\+-?.*)")
+    STRING (REGEX REPLACE ".*(clang\\+\\+-?[^ ]*).*" "\\1" SEQAN_CTEST_GENERATOR_SHORT "$ENV{CXX}")
+  elseif ("$ENV{CXX}" MATCHES ".*g\\+\\+-?.*")
+    STRING (REGEX REPLACE ".*(g\\+\\+-?[^ ]*).*" "\\1" SEQAN_CTEST_GENERATOR_SHORT "$ENV{CXX}")
+  else ("$ENV{CXX}" MATCHES ".*(clang\\+\\+-?.*)")
     message(FATAL_ERROR "Could not determine compiler from \"$ENV{CXX}\"")
-  endif ("$ENV{CXX}" MATCHES ".*(clang\\+\\+-.*)")
+  endif ("$ENV{CXX}" MATCHES ".*(clang\\+\\+-?.*)")
 endif (WIN32)
 
 message (STATUS "SEQAN_CTEST_GENERATOR is ${SEQAN_CTEST_GENERATOR}")
