@@ -19,5 +19,8 @@ export PATH=/group/agabi/software/bin:${PATH}
 # Add nightly svn wrapper to $PATH.
 export PATH=/home/takifugu/holtgrew/Nightly/bin:${PATH}
 
+# Path to LEMON library.
+export LEMON_ROOT_DIR=/group/agabi/software/x86_64/lemon-1.2.3
+
 # Enable parallel builds.
 #export SEQAN_CTEST_BUILD_FLAGS="-j8"

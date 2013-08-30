@@ -25,5 +25,8 @@ export PATH=/home/takifugu/holtgrew/Nightly/bin:${PATH}
 # For 32 bit builds, we need 32 bit versions of bzlib and zlib.
 export SEQAN_CMAKE_FIND_ROOT_PATH="/lib32;/usr/lib32"
 
+# Path to LEMON library.
+export LEMON_ROOT_DIR=/group/agabi/software/i686/lemon-1.2.3
+
 # Enable parallel builds.
 #export SEQAN_CTEST_BUILD_FLAGS="-j8"

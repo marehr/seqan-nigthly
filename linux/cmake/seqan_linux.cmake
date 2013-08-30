@@ -213,8 +213,8 @@ endif (NOT WIN32)
 # ------------------------------------------------------------
 
 FIND_PROGRAM(CTEST_MEMORYCHECK_COMMAND NAMES valgrind)
-SET(CTEST_MEMORY_CHECK_COMMAND "/group/agabi/software/bin/valgrind")
-SET(CTEST_MEMORYCHECK_COMMAND_OPTIONS "${CTEST_MEMORYCHECK_COMMAND_OPTIONS} --suppressions=${CTEST_SOURCE_ROOT_DIRECTORY}/misc/seqan.supp --suppressions=${CTEST_SOURCE_ROOT_DIRECTORY}/misc/python.supp")
+SET(CTEST_MEMORY_CHECK_COMMAND "/usr/bin/valgrind")
+SET(CTEST_MEMORYCHECK_COMMAND_OPTIONS "${CTEST_MEMORYCHECK_COMMAND_OPTIONS} --suppressions=${CTEST_SOURCE_ROOT_DIRECTORY}/misc/seqan.supp --suppressions=${CTEST_SOURCE_ROOT_DIRECTORY}/misc/python.supp --suppressions=/usr/lib/valgrind/python.supp")
 FIND_PROGRAM(CTEST_COVERAGE_COMMAND NAMES gcov)
 
 # ------------------------------------------------------------
@@ -272,6 +272,12 @@ else (MODEL STREQUAL "NightlyMemCheck")
 CMAKE_BUILD_TYPE:STRING=Release")
 endif (MODEL STREQUAL "NightlyMemCheck")
 
+# Allow disabling of library search in 64 bit dirs.
+if (SEQAN_FIND_LIBRARY_USE_LIB64_PATHS_OFF)
+    file (APPEND "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "
+SEQAN_FIND_LIBRARY_USE_LIB64_PATHS_OFF:BOOL=ON")
+endif (SEQAN_FIND_LIBRARY_USE_LIB64_PATHS_OFF)
+
 # ------------------------------------------------------------
 # Set environment variables.
 # ------------------------------------------------------------
@@ -301,8 +307,7 @@ message("set (CTEST_ENVIRONMENT ${SEQAN_CTEST_ENVIRONMENT})")
 
 set (CTEST_CUSTOM_WARNING_EXCEPTION
     # Suppress warnings about slow 64 bit atomic intrinsics.
-    "compatibility.h:166: note:.*pragma message: slow.*64"
-    "compatibility.h:304: note:.*pragma message: slow.*64")
+    "compatibility.h.*: note:.*pragma message: slow.*64")
 
 # ------------------------------------------------------------
 # Perform the actual tests.
