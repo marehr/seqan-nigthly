@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Add to crontab line as follows:
+# 0 1 * * * GIT_BRANCH=master path/to/run_experimental_64bit.sh &>/dev/null
+
+umask 002
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 CTEST=/usr/bin/ctest
