@@ -216,7 +216,7 @@ find_program (CTEST_GIT_COMMAND
               NAMES git
               HINTS "C:/Program Files/TortoiseSVN/bin")
 if (NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")
-  set (CTEST_CHECKOUT_COMMAND "${CTEST_GIT_COMMAND} clone git@github.com:seqan/seqan-svn.git ${CTEST_SOURCE_DIRECTORY}")
+  set (CTEST_CHECKOUT_COMMAND "${CTEST_GIT_COMMAND} clone https://github.com/seqan/seqan-svn.git ${CTEST_SOURCE_DIRECTORY}")
 endif ()
 set (CTEST_UPDATE_COMMAND "${CTEST_GIT_COMMAND}")
 
