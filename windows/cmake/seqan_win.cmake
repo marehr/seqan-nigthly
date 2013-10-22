@@ -50,8 +50,22 @@ if (${CTEST_SCRIPT_ARG} MATCHES Experimental)
 elseif (${CTEST_SCRIPT_ARG} MATCHES Continuous)
     set (SEQAN_CTEST_MODEL Continuous)
 endif (${CTEST_SCRIPT_ARG} MATCHES Experimental)
+
 set (MODEL ${SEQAN_CTEST_MODEL})
 message (STATUS "SEQAN_CTEST_MODEL is           ${SEQAN_CTEST_MODEL}")
+
+# ------------------------------------------------------------
+# Get git branch out of command line.
+# ------------------------------------------------------------
+
+set (SEQAN_GIT_BRANCH master)
+if (${CTEST_SCRIPT_ARG} MATCHES "branch=master")
+    set (SEQAN_GIT_BRANCH master)
+elseif (${CTEST_SCRIPT_ARG} MATCHES "branch=develop")
+    set (SEQAN_GIT_BRANCH develop)
+endif ()
+
+message (STATUS "SEQAN_GIT_BRANCH is            ${SEQAN_GIT_BRANCH}")
 
 # ---------------------------------------------------------------------------
 # Parse build type from command args, fallback to Release.
@@ -142,12 +156,14 @@ SET (CTEST_PROJECT_NAME "SeqAn")
 # Set CTest variables for directories.
 # ------------------------------------------------------------
 
-# The SVN checkout goes here.
-set (CTEST_SOURCE_ROOT_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/co/seqan-${SEQAN_CTEST_MODEL}-${SEQAN_CTEST_PTRWIDTH}")
-set (CTEST_SOURCE_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/co/seqan-${SEQAN_CTEST_MODEL}-${SEQAN_CTEST_PTRWIDTH}")
+# We have one checkout per git branch since we want to do them in parallel.
+
+# The Git checkout goes here.
+set (CTEST_SOURCE_ROOT_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/co-git-${SEQAN_GIT_BRANCH}/seqan-${SEQAN_CTEST_MODEL}-${SEQAN_CTEST_PTRWIDTH}")
+set (CTEST_SOURCE_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/co-git-${SEQAN_GIT_BRANCH}/seqan-${SEQAN_CTEST_MODEL}-${SEQAN_CTEST_PTRWIDTH}")
 
 # Set build directory and directory to run tests in.
-set (CTEST_BINARY_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/build/${CTEST_BUILD_NAME}")
+set (CTEST_BINARY_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/build-git-${SEQAN_GIT_BRANCH}/${CTEST_BUILD_NAME}")
 set (CTEST_BINARY_TEST_DIRECTORY "${CTEST_BINARY_DIRECTORY}")
 
 # ------------------------------------------------------------
@@ -161,11 +177,14 @@ SET ($ENV{LC_MESSAGES} "en_EN")
 set (CTEST_CMAKE_COMMAND cmake)
 # Give path to SVN and the checkout command.
 # TODO(holtgrew): The path to tortoise svn could also come from batch script.
-find_program (CTEST_SVN_COMMAND
-              NAMES svn
-              HINTS "C:/Program Files/TortoiseSVN/bin")
-set (CTEST_CHECKOUT_COMMAND "${CTEST_SVN_COMMAND} co http://svn.seqan.de/seqan/trunk ${CTEST_SOURCE_DIRECTORY}")
-set (CTEST_UPDATE_COMMAND ${CTEST_SVN_COMMAND})
+find_program (CTEST_GIT_COMMAND
+              NAMES git
+              HINTS "C:/Program Files (x86)/Git/bin"
+                    "C:/Program Files/Git/bin")
+if (NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")
+  set (CTEST_CHECKOUT_COMMAND "${CTEST_GIT_COMMAND} clone https://github.com/seqan/seqan-svn.git ${CTEST_SOURCE_DIRECTORY}")
+endif ()
+set (CTEST_UPDATE_COMMAND "${CTEST_GIT_COMMAND}")
 
 # ------------------------------------------------------------
 # Preparation of the binary directory.
@@ -223,7 +242,11 @@ endif ()
 # Perform the actual tests.
 # ------------------------------------------------------------
 
-CTEST_START (${SEQAN_CTEST_MODEL})
+if (SEQAN_GIT_BRANCH STREQUAL "develop")
+  CTEST_START (${SEQAN_CTEST_MODEL} TRACK BranchDevelop)
+else (SEQAN_GIT_BRANCH STREQUAL "develop")
+  CTEST_START (${SEQAN_CTEST_MODEL} TRACK BranchMaster)
+endif (SEQAN_GIT_BRANCH STREQUAL "develop")
 
 # Copying the CTestConfig.cmake here is not optimal.  You might have to call
 # ctest twice to get an actual build since ctest expects it to be present
@@ -234,6 +257,10 @@ CONFIGURE_FILE (${CTEST_SOURCE_DIRECTORY}/util/cmake/CTestConfig.cmake
 
 # Update from repository, configure, build, test, submit.  These commands will
 # get all necessary information from the CTEST_* variables set above.
+#
+# We have to use execute_process to update to the correct branch.
+execute_process (COMMAND "${GIT_EXECUTABLE}" checkout "${SEQAN_GIT_BRANCH}"
+                 WORKING_DIRECTORY "${CTEST_SOURCE_DIRECTORY}")
 CTEST_UPDATE    (RETURN_VALUE VAL)
 CTEST_CONFIGURE ()
 CTEST_BUILD     ()
