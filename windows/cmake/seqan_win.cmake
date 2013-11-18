@@ -182,7 +182,7 @@ find_program (CTEST_GIT_COMMAND
               HINTS "C:/Program Files (x86)/Git/bin"
                     "C:/Program Files/Git/bin")
 if (NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")
-  set (CTEST_CHECKOUT_COMMAND "${CTEST_GIT_COMMAND} clone https://github.com/seqan/seqan-svn.git ${CTEST_SOURCE_DIRECTORY}")
+  set (CTEST_CHECKOUT_COMMAND "${CTEST_GIT_COMMAND} clone -b ${SEQAN_GIT_BRANCH} https://github.com/seqan/seqan-svn.git ${CTEST_SOURCE_DIRECTORY}")
 endif ()
 set (CTEST_UPDATE_COMMAND "${CTEST_GIT_COMMAND}")
 
@@ -208,6 +208,7 @@ CTEST_EMPTY_BINARY_DIRECTORY (${CTEST_BINARY_DIRECTORY})
 file (WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "
 CMAKE_BUILD_TYPE:STRING=${CTEST_BUILD_CONFIGURATION}
 CMAKE_GENERATOR:INTERNAL=${CTEST_CMAKE_GENERATOR}
+SEQAN_ENABLE_CUDA:BOOL=OFF
 ")
 
 if (SEQAN_CTEST_GENERATOR STREQUAL "MinGW Makefiles")
@@ -253,14 +254,11 @@ endif (SEQAN_GIT_BRANCH STREQUAL "develop")
 # at the first time and will fail.
 CONFIGURE_FILE (${CTEST_SOURCE_DIRECTORY}/util/cmake/CTestConfig.cmake
                 ${CTEST_SOURCE_ROOT_DIRECTORY}/CTestConfig.cmake
-				COPYONLY)
+                COPYONLY)
 
 # Update from repository, configure, build, test, submit.  These commands will
 # get all necessary information from the CTEST_* variables set above.
-#
-# We have to use execute_process to update to the correct branch.
-execute_process (COMMAND "${GIT_EXECUTABLE}" checkout "${SEQAN_GIT_BRANCH}"
-                 WORKING_DIRECTORY "${CTEST_SOURCE_DIRECTORY}")
+
 CTEST_UPDATE    (RETURN_VALUE VAL)
 CTEST_CONFIGURE ()
 CTEST_BUILD     ()
