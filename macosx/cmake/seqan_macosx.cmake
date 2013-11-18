@@ -216,7 +216,7 @@ find_program (CTEST_GIT_COMMAND
               NAMES git
               HINTS "C:/Program Files/TortoiseSVN/bin")
 if (NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")
-  set (CTEST_CHECKOUT_COMMAND "${CTEST_GIT_COMMAND} clone https://github.com/seqan/seqan-svn.git ${CTEST_SOURCE_DIRECTORY}")
+  set (CTEST_CHECKOUT_COMMAND "${CTEST_GIT_COMMAND} clone -b ${SEQAN_GIT_BRANCH} https://github.com/seqan/seqan-svn.git ${CTEST_SOURCE_DIRECTORY}")
 endif ()
 set (CTEST_UPDATE_COMMAND "${CTEST_GIT_COMMAND}")
 
@@ -344,10 +344,6 @@ CONFIGURE_FILE (${CTEST_SOURCE_DIRECTORY}/util/cmake/CTestConfig.cmake
 
 # Update from repository, configure, build, test, submit.  These commands will
 # get all necessary information from the CTEST_* variables set above.
-#
-# We have to use execute_process to update to the correct branch.
-execute_process (COMMAND ${GIT_EXECUTABLE} checkout ${SEQAN_GIT_BRANCH}
-                 WORKING_DIRECTORY ${CTEST_SOURCE_DIRECTORY})
 message(" -- Update ${SEQAN_CTEST_MODEL} - ${CTEST_BUILD_NAME} --")
 CTEST_UPDATE    (RETURN_VALUE VAL)
 CTEST_CONFIGURE ()
