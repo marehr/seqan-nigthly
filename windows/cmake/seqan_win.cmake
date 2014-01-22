@@ -184,7 +184,7 @@ find_program (CTEST_GIT_COMMAND
               HINTS "C:/Program Files (x86)/Git/bin"
                     "C:/Program Files/Git/bin")
 if (NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")
-  set (CTEST_CHECKOUT_COMMAND "${CTEST_GIT_COMMAND} clone -b ${SEQAN_GIT_BRANCH} https://github.com/seqan/seqan-svn.git ${CTEST_SOURCE_DIRECTORY}")
+  set (CTEST_CHECKOUT_COMMAND "${CTEST_GIT_COMMAND} clone -b ${SEQAN_GIT_BRANCH} https://github.com/seqan/seqan.git ${CTEST_SOURCE_DIRECTORY}")
 endif ()
 set (CTEST_UPDATE_COMMAND "${CTEST_GIT_COMMAND}")
 
