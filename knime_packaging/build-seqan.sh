@@ -1,8 +1,10 @@
 #!/bin/bash
 
+SCRIPT_PATH=`dirname $0`
+
 # load path options
-source config.sh
-source functions.sh
+source ${SCRIPT_PATH}/config.sh
+source ${SCRIPT_PATH}/functions.sh
 
 # update seqan 
 git_update $SEQAN_SOURCE master

@@ -1,8 +1,10 @@
 #!/bin/bash
 
+SCRIPT_PATH=`dirname $0`
+
 # load path options
-source config.sh
-source functions.sh
+source ${SCRIPT_PATH}/config.sh
+source ${SCRIPT_PATH}/functions.sh
 
 # fetch updates for node generator
 git_update ${BASE_PLUGIN_PATH} develop
