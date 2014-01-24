@@ -4,6 +4,9 @@
 source config.sh
 source functions.sh
 
+# fetch updates for node generator
+git_update ${BASE_PLUGIN_PATH} develop
+
 # build the plugin source code
 pushd ${BASE_PLUGIN_PATH}
 
