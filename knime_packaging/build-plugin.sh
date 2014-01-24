@@ -17,4 +17,4 @@ ant -Dplugin.dir=${PLUGIN_CENTRAL_PATH} -Dcustom.plugin.generator.target=${PLUGI
 popd
 
 # copy to final, remote-accessible target
-rsync -avzn --delete --exclude ".git" ${PLUGIN_BUILD}/ ${REMOTE_TARGET}
+rsync -avz --delete --exclude ".git" ${PLUGIN_BUILD}/ ${REMOTE_TARGET}
