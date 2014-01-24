@@ -1,0 +1,19 @@
+# config file for knime packaging builds
+
+BASE_PLUGIN_PATH=/group/ag_abi/SeqAn/knime_packaging/GenericKnimeNodes/
+
+SEQAN_SOURCE=/group/ag_abi/SeqAn/knime_packaging/seqan
+SEQAN_BUILD=/buffer/ag_abi/knime_packaging/seqan/seqan-build
+
+PLUGIN_SOURCE=/buffer/ag_abi/knime_packaging/seqan/plugin-source
+PLUGIN_BUILD=/buffer/ag_abi/knime_packaging/seqan/plugin-build
+
+REMOTE_TARGET=openmsdata@login.imp.fu-berlin.de:/group/ag_abi/openmsdata/seqan_knime_package/
+
+PLUGIN_CENTRAL_HOST=login.imp.fu-berlin.de
+PLUGIN_CENTRAL_PATH=/buffer/ag_abi/knime_packaging/seqan/plugin-source
+PLUGIN_CENTRAL=$PLUGIN_CENTRAL_HOST:$PLUGIN_CENTRAL_PATH
+KNIME_SDK=/group/ag_abi/SeqAn/knime_packaging/eclipse_knime_2.9.1
+
+CXX=/usr/bin/g++-4.7
+CC=/usr/bin/gcc-4.7

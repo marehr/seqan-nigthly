@@ -10,7 +10,10 @@ PLUGIN_BUILD=/Users/aiche/SEQAN_KNIME_PACKAGING/plugin-build
 
 REMOTE_TARGET=openmsdata@login.imp.fu-berlin.de:/group/ag_abi/openmsdata/knime_package/seqan/
 
-PLUGIN_CENTRAL=login.imp.fu-berlin.de:/buffer/ag_abi/knime_packaging/seqan/plugin-source
+PLUGIN_CENTRAL_HOST=login.imp.fu-berlin.de
+PLUGIN_CENTRAL_PATH=/buffer/ag_abi/knime_packaging/seqan/plugin-source
+PLUGIN_CENTRAL=$PLUGIN_CENTRAL_HOST:$PLUGIN_CENTRAL_PATH
+
 KNIME_SDK=/Users/aiche/SEQAN_KNIME_PACKAGING/eclipse_knime_2.9.1
 
 CXX=/usr/local/bin/g++-4.7
