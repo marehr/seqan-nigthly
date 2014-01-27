@@ -1,5 +1,7 @@
 #!/bin/bash
 
+umask 002
+
 SCRIPT_PATH=`dirname $0`
 
 # load path options
