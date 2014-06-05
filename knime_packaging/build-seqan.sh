@@ -21,7 +21,9 @@ cd $SEQAN_BUILD
 cmake -D WORKFLOW_PLUGIN_DIR=$PLUGIN_SOURCE -D CMAKE_BUILD_TYPE=Release $SEQAN_SOURCE
 
 # build seqan
-cmake --build . --target prepare_workflow_plugin --config Release
+##cmake --build . --target prepare_workflow_plugin --config Release
+# we use make directly to keep going in case of errors
+make prepare_workflow_plugin -k
 
 # ensure plugin central exists
 ssh $PLUGIN_CENTRAL_HOST "mkdir -p ${PLUGIN_CENTRAL_PATH}"
