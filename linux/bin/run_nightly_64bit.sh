@@ -6,9 +6,22 @@
 umask 002
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 CTEST=/usr/bin/ctest
 
 . ${DIR}/setvars_64bit.sh
+. ${DIR}/lock_utils.sh
+. ${DIR}/mktemp.sh
+
+# OBTAIN LOCK OR FAIL
+
+if exlock; then
+    echo "Could not obtain lock!" 1>&2
+    echo "Path to lock file is ${LOCKFILE}" 1>&2
+    exit 1
+fi
+
+# ACTUALLY RUN SCRIPTS
 
 mkdir -p /buffer/ag_abi/Nightly/seqan/linux64
 mkdir -p ${DIR}/../log
@@ -36,4 +49,4 @@ CXX="/usr/bin/g++-4.7" ${CTEST} -S seqan_linux_host.cmake,branch=${GIT_BRANCH},N
 CXX="/usr/bin/g++-4.7 -std=c++11" ${CTEST} -S seqan_linux_host.cmake,branch=${GIT_BRANCH},Nightly -VV -d 2>&1 | tee ${DIR}/../log/ctest_nightly_g++-4.7-64-c++11.log
 
 popd
-
+unlock

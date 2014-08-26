@@ -10,6 +10,18 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CTEST=/usr/bin/ctest
 
 . ${DIR}/setvars_32bit.sh
+. ${DIR}/lock_utils.sh
+. ${DIR}/mktemp.sh
+
+# OBTAIN LOCK OR FAIL
+
+if exlock; then
+    echo "Could not obtain lock!" 1>&2
+    echo "Path to lock file is ${LOCKFILE}" 1>&2
+    exit 1
+fi
+
+# ACTUALLY RUN SCRIPTS
 
 mkdir -p ${DIR}/../log
 
@@ -36,5 +48,6 @@ CXX="/usr/bin/g++-4.6 -m32" ${CTEST} -S seqan_linux_host_32bit.cmake,branch=${GI
 CXX="/usr/bin/g++-4.6 -m32" ${CTEST} -S seqan_linux_host_32bit.cmake,branch=${GIT_BRANCH},ExperimentalMemCheck -VV -d 2>&1 | tee ${DIR}/../log/ctest_experimental_g++-4.6-32-memcheck.log
 CXX="/usr/bin/g++-4.7 -m32" ${CTEST} -S seqan_linux_host_32bit.cmake,branch=${GIT_BRANCH},Experimental -VV -d 2>&1 | tee ${DIR}/../log/ctest_experimental_g++-4.7-32.log
 CXX="/usr/bin/g++-4.7 -m32 -std=c++11" ${CTEST} -S seqan_linux_host_32bit.cmake,branch=${GIT_BRANCH},Experimental -VV -d 2>&1 | tee ${DIR}/../log/ctest_experimental_g++-4.7-32-c++11.log
-popd
 
+popd
+unlock

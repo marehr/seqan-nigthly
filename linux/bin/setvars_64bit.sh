@@ -11,7 +11,7 @@ export LC_ALL=C
 export CXXFLAGS="${CXXFLAGS} -DSEQAN_IGNORE_MISSING_OPENMP=1"
 
 # Export the python path to point to the checkout.
-export PYTHONPATH=/storage/mi/holtgrew/Nightly/linux64/co/seqan-Nightly-64/util/py_lib
+export PYTHONPATH=/buffer/ag_abi/Nightly/seqan/linux64/co/seqan-Nightly-64/util/py_lib
 
 # Make the software in /group/ag_abi/software/bin visible.
 export PATH=/group/ag_abi/software/bin:${PATH}
@@ -23,7 +23,7 @@ export PATH=/home/mi/holtgrew/Nightly/bin:${PATH}
 export LEMON_ROOT_DIR=/group/ag_abi/software/x86_64/lemon-1.2.3
 
 # Path to temporary directory.
-#export TMPDIR=/export/userdata/holtgrew/tmp/seqan-nightly
+export TMPDIR=/export/userdata/holtgrew/tmp/seqan-nightly
 
 # Enable parallel builds.
 #export SEQAN_CTEST_BUILD_FLAGS="-j8"

@@ -28,5 +28,8 @@ export SEQAN_CMAKE_FIND_ROOT_PATH="/lib32;/usr/lib32"
 # Path to LEMON library.
 export LEMON_ROOT_DIR=/group/ag_abi/software/i686/lemon-1.2.3
 
+# Path to temporary directory.
+#export TMPDIR=/export/userdata/holtgrew/tmp/seqan-nightly
+
 # Enable parallel builds.
 #export SEQAN_CTEST_BUILD_FLAGS="-j8"
