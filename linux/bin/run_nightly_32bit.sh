@@ -13,6 +13,8 @@ CTEST=/usr/bin/ctest
 . ${DIR}/lock_utils.sh
 . ${DIR}/mktemp.sh
 
+. ${HOME}/virtualenv/nightly/bin
+
 # OBTAIN LOCK OR FAIL
 
 if exlock; then
