@@ -7,7 +7,7 @@ mkdir -p ${TMPDIR}
 _DIR=$(mktemp -d "${TMPDIR}/ctest.XXXXXXXX")
 export TMPDIR=${_DIR}
 
-function cleanup_tmpdir()
+cleanup_tmpdir()
 {
     rm -rf $_DIR
 }

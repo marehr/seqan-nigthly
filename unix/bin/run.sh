@@ -116,12 +116,12 @@ for COMPILER in $COMPILERS
 do
     # check whether $COMPILER is installed
     COMPILER_ABS=$(which "$COMPILER") # make path absolut
-    if [ $? == 0 ]
+    if [ $? -eq 0 ]
     then
         echo "Running CTEST for $COMPILER " | tee ${LOGFILE}
 
-        CCOMPILER_ABS=${COMPILER_ABS/clang++/clang}
-        CCOMPILER_ABS=${CCOMPILER_ABS/g++/gcc}
+        ## replace last occurrence of "clang++" with "clang" and "g++" with "gcc"
+        CCOMPILER_ABS=$(echo  $COMPILER_ABS | rev | sed -e 's|++gnalc|gnalc|' -e 's|++g|ccg|'| rev)
         export BUILDNAME="${PLATFORM}_${COMPILER}_${BITS}"
         [ $WITH_MEMCHECK -ne 0 ] && export BUILDNAME="${BUILDNAME}_memcheck"
         [ $WITH_COVERAGE -ne 0 ] && export BUILDNAME="${BUILDNAME}_coverage"
