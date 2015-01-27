@@ -9,21 +9,16 @@ CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
 cmake_policy (SET CMP0011 NEW)  # Suppress warning about PUSH/POP policy change.
 
 # ---------------------------------------------------------------------------
-# MANDATORY VARIABLES
+# MANDATORY EXTERNAL VARIABLES
 # ---------------------------------------------------------------------------
 
 if (NOT DEFINED ENV{BUILDNAME})
     message (FATAL_ERROR "No BUILDNAME defined (can be arbitary STRING).")
 endif (NOT DEFINED ENV{BUILDNAME})
-set (CTEST_BUILD_NAME "$ENV{BUILDNAME}")
 
 if (NOT DEFINED ENV{TESTROOT})
     message (FATAL_ERROR "No TESTROOT defined (can be arbitrary existing DIR).")
 endif (NOT DEFINED ENV{TESTROOT})
-
-# if (NOT DEFINED ENV{CTEST_MODE})
-#     message (FATAL_ERROR "No MODEL defined (can be Nightly, NightlyCoverage or NightlyMemCheck).")
-# endif (NOT DEFINED ENV{MODEL})
 
 if (NOT DEFINED ENV{GIT_BRANCH})
     message (FATAL_ERROR "No GIT_BRANCH defined (can be master or develop).")
@@ -50,174 +45,6 @@ if (DEFINED ENV{THREADS})
     set (CTEST_BUILD_FLAGS "-j $ENV{THREADS}")
 endif (DEFINED ENV{THREADS})
 
-# if (DEFINED ENV{SEQAN_CMAKE_FIND_ROOT_PATH})
-#   set (SEQAN_CMAKE_FIND_ROOT_PATH "$ENV{SEQAN_CMAKE_FIND_ROOT_PATH}")
-# endif (DEFINED ENV{SEQAN_CMAKE_FIND_ROOT_PATH})
-
-# ---------------------------------------------------------------------------
-# Print variables from the outside for debugging.
-# ---------------------------------------------------------------------------
-
-# message (STATUS "The following variables were set from outside.")
-# message (STATUS "SEQAN_CTEST_HOST is      ${SEQAN_CTEST_HOST}")
-# message (STATUS "SEQAN_CTEST_OS is        ${SEQAN_CTEST_OS}")
-# message (STATUS "SEQAN_CTEST_GENERATOR is ${SEQAN_CTEST_GENERATOR}")
-
-# ---------------------------------------------------------------------------
-# Set SEQAN_CTEST_{OS,CXX}_PTRWIDTH from SEQAN_CTEST_OS or ARCH.
-# ---------------------------------------------------------------------------
-
-# execute_process(COMMAND uname -m
-#                 OUTPUT_VARIABLE MACHINE_NAME)
-# 
-# if (MACHINE_NAME MATCHES ".*64")
-#   set (SEQAN_CTEST_OS_PTRWIDTH "64")
-# else (MACHINE_NAME MATCHES ".*64")
-#   set (SEQAN_CTEST_OS_PTRWIDTH "32")
-# endif (MACHINE_NAME MATCHES ".*64")
-# 
-# set (SEQAN_CTEST_CXX_PTRWIDTH ${SEQAN_CTEST_OS_PTRWIDTH})
-# 
-# if (DEFINED ENV{BITS})
-#     set (SEQAN_CTEST_CXX_PTRWIDTH $ENV{BITS})
-# endif (DEFINED ENV{BITS})
-# 
-# message (STATUS "SEQAN_CTEST_OS_PTRWIDTH is  ${SEQAN_CTEST_OS_PTRWIDTH}")
-# message (STATUS "SEQAN_CTEST_CXX_PTRWIDTH is ${SEQAN_CTEST_CXX_PTRWIDTH}")
-# 
-# ## append -m32 if target arch is different from host arch
-# if (${SEQAN_CTEST_OS_PTRWIDTH} NOT EQUAL ${SEQAN_CTEST_CXX_PTRWIDTH})
-#     set($ENV{CC} "$ENV{CC} -m${SEQAN_CTEST_CXX_PTRWIDTH}")
-#     set($ENV{CXX} "$ENV{CXX} -m${SEQAN_CTEST_CXX_PTRWIDTH}")
-# endif (${SEQAN_CTEST_OS_PTRWIDTH} NOT EQUAL ${SEQAN_CTEST_CXX_PTRWIDTH})
-
-# ---------------------------------------------------------------------------
-# Set SEQAN_CTEST_CXX_STANDARD_VERSION from $ENV{CXX}.
-# ---------------------------------------------------------------------------
-
-# if (NOT WIN32)
-#   if ("$ENV{CXX}" MATCHES ".*-std=c\\+\\+11.*")
-#     set (SEQAN_CTEST_CXX_VERSION "c++11")
-#     set (SEQAN_CTEST_CXX_VERSION_STR "-c++11") # placed in compiler verison
-#   else ("$ENV{CXX}" MATCHES ".*-std=c\\+\\+11.*")
-#     set (SEQAN_CTEST_CXX_VERSION "c++98")
-#     set (SEQAN_CTEST_CXX_VERSION_LABEL "")  # don't show in CDash
-#   endif ("$ENV{CXX}" MATCHES ".*-std=c\\+\\+11.*")
-# endif (NOT WIN32)
-
-# ---------------------------------------------------------------------------
-# Get MODEL from command args.
-# ---------------------------------------------------------------------------
-
-
- 
- # if (${CTEST_SCRIPT_ARG} MATCHES Experimental)
-#     set (Nightly Experimental)
-# elseif (${CTEST_SCRIPT_ARG} MATCHES Continuous)
-#     set (Nightly Continuous)
-# elseif (${CTEST_SCRIPT_ARG} MATCHES NightlyCoverage)
-#     set (Nightly NightlyCoverage)
-# elseif (${CTEST_SCRIPT_ARG} MATCHES ExperimentalCoverage)
-#     set (Nightly ExperimentalCoverage)
-# elseif (${CTEST_SCRIPT_ARG} MATCHES NightlyMemCheck)
-#     set (Nightly NightlyMemCheck)
-# elseif (${CTEST_SCRIPT_ARG} MATCHES ExperimentalMemCheck)
-#     set (Nightly ExperimentalMemCheck)
-# endif (${CTEST_SCRIPT_ARG} MATCHES Experimental)
-# set (Nightly Nightly)
-# 
-# message (STATUS "MODEL is           Nightly")
-
-# ------------------------------------------------------------
-# Get git branch out of command line.
-# ------------------------------------------------------------
-
-# set ($ENV{GIT_BRANCH} master)
-# if (DEFINED ENV{GIT_BRANCH})
-#     set($ENV{GIT_BRANCH} $ENV{GIT_BRANCH})
-# endif (DEFINED ENV{GIT_BRANCH})
-
-# ---------------------------------------------------------------------------
-# Set SEQAN_CTEST_GENERATOR_SHORT and CTEST_BUILD_NAME from the
-# ${SEQAN_CTEST_*} variables.  On Unix, we use CTEST_GENERATOR_SHORT to
-# store the compiler and version.
-# ---------------------------------------------------------------------------
-
-# if (WIN32)
-#   # On Window System.
-# 
-#   if (SEQAN_CTEST_GENERATOR STREQUAL "MinGW Makefiles")
-#     set (SEQAN_CTEST_GENERATOR_SHORT "mingw")
-#   else (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio")
-#     # Set ptr width into generator if 64 bit.
-#     if (SEQAN_CTEST_OS_PTRWIDTH STREQUAL "64")
-#       set (SEQAN_CTEST_GENERATOR "${SEQAN_CTEST_GENERATOR} Win64")
-#     endif (SEQAN_CTEST_OS_PTRWIDTH STREQUAL "64")
-# 
-#     # Determine short generator name.
-#     if (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 8.*")
-#       set (SEQAN_CTEST_GENERATOR_SHORT "VS8")
-#     elseif (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 9.*")
-#       set (SEQAN_CTEST_GENERATOR_SHORT "VS9")
-#     elseif (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 10.*")
-#       set (SEQAN_CTEST_GENERATOR_SHORT "VS10")
-#     else (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 8.*")
-#       message (FATAL_ERROR "Unknown generator ${SEQAN_CTEST_GENERATOR}")
-#     endif (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 8.*")
-#   endif (SEQAN_CTEST_GENERATOR STREQUAL "MinGW Makefiles")
-# else (WIN32)
-#   # On Unix System, the environment variable CXX has to be set.
-#   if ("$ENV{CXX}x" STREQUAL "x")
-#     message (FATAL_ERROR "Environment variable CXX not set.  Cannot determine compiler.")
-#   endif ("$ENV{CXX}x" STREQUAL "x")
-# 
-#   if ("$ENV{CXX}" MATCHES ".*(clang\\+\\+-?.*)")
-#     STRING (REGEX REPLACE ".*(clang\\+\\+-?[^ ]*).*" "\\1" SEQAN_CTEST_GENERATOR_SHORT "$ENV{CXX}")
-#   elseif ("$ENV{CXX}" MATCHES ".*g\\+\\+-?.*")
-#     STRING (REGEX REPLACE ".*(g\\+\\+-?[^ ]*).*" "\\1" SEQAN_CTEST_GENERATOR_SHORT "$ENV{CXX}")
-#   else ("$ENV{CXX}" MATCHES ".*(clang\\+\\+-?.*)")
-#     message(FATAL_ERROR "Could not determine compiler from \"$ENV{CXX}\"")
-#   endif ("$ENV{CXX}" MATCHES ".*(clang\\+\\+-?.*)")
-# endif (WIN32)
-# 
-# message (STATUS "SEQAN_CTEST_GENERATOR is ${SEQAN_CTEST_GENERATOR}")
-set (CTEST_CMAKE_GENERATOR "Unix Makefiles")
-
-# ------------------------------------------------------------
-# Set CTest variables with general configuration.
-# ------------------------------------------------------------
-
-
-
-# # Increase the timeout if running with memory checking.  Also, set
-# # SEQAN_BUILD_SUFFIX to "-memcheck".
-# if (Nightly STREQUAL "NightlyMemCheck")
-#   SET (CTEST_TEST_TIMEOUT 7200)
-#   SET (SEQAN_BUILD_SUFFIX "_memcheck")
-# elseif(Nightly STREQUAL "ExperimentalMemCheck")
-#   SET (CTEST_TEST_TIMEOUT 7200)
-#   SET (SEQAN_BUILD_SUFFIX "_memcheck")
-# endif (Nightly STREQUAL "NightlyMemCheck")
-# 
-# # Set SEQAN_BUILD_SUFFIX for Coverage tests.
-# if (Nightly STREQUAL "NightlyCoverage")
-#   SET (SEQAN_BUILD_SUFFIX "_coverage")
-# elseif(Nightly STREQUAL "ExperimentalCoverage")
-#   SET (SEQAN_BUILD_SUFFIX "_coverage")
-# endif (Nightly STREQUAL "NightlyCoverage")
-
-# TODO(h4nn3s): do we really have CTEST_TIMEOUT and CTEST_TEST_TIMEOUT?
-# Set timeout to 10min. 
-set (CTEST_TIMEOUT "600")
-
-if (${CTEST_BUILD_NAME} MATCHES ".*memcheck")
-    set (CTEST_TEST_TIMEOUT 7200)
-endif (${CTEST_BUILD_NAME} MATCHES ".*memcheck")
-
-# Increase reported warning and error count.
-set (CTEST_CUSTOM_MAXIMUM_NUMBER_OF_ERRORS   1000)
-set (CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 1000)
-
 # ------------------------------------------------------------
 # Set CTest variables describing the build.
 # ------------------------------------------------------------
@@ -226,22 +53,30 @@ set (CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 1000)
 find_program(HOSTNAME_CMD NAMES hostname)
 EXECUTE_PROCESS(COMMAND ${HOSTNAME_CMD} -f OUTPUT_VARIABLE FULL_HOSTNAME OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-set (CTEST_SITE "${FULL_HOSTNAME}")
-# 
-# if (DEFINED ENV{BUILDNAME})
-# 
-# else (DEFINED ENV{BUILDNAME})
-#     message (FATAL_ERROR "No BUILDNAME defined.")
-# endif (DEFINED ENV{BUILDNAME})
-
 # This project name is used for the CDash submission.
 SET (CTEST_PROJECT_NAME "SeqAn")
+set (CTEST_CMAKE_GENERATOR "Unix Makefiles")
+set (CTEST_BUILD_NAME "$ENV{BUILDNAME}")
+set (CTEST_SITE "${FULL_HOSTNAME}")
+
+# TODO(h4nn3s): do we really have CTEST_TIMEOUT and CTEST_TEST_TIMEOUT?
+set (CTEST_TIMEOUT "600")
+if (${CTEST_BUILD_NAME} MATCHES ".*memcheck.*")
+    set (CTEST_TEST_TIMEOUT 7200)
+endif (${CTEST_BUILD_NAME} MATCHES ".*memcheck.*")
+
+# Increase reported warning and error count.
+set (CTEST_CUSTOM_MAXIMUM_NUMBER_OF_ERRORS   1000)
+set (CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 1000)
 
 # ------------------------------------------------------------
 # Set CTest variables for directories.
 # ------------------------------------------------------------
 
-# We have one checkout per git branch since we want to do them in parallel.
+# In theory one checkout for develop and master each would be enough
+# but since multiple scripts might run in parallel they might conflict
+# TODO(h4nn3s) move git clone and update into the sh script where locking
+# can be used to prevent multiple checkout dirs
 
 # The Git checkout goes here.
 set (CTEST_SOURCE_ROOT_DIRECTORY "$ENV{TESTROOT}/co-git-$ENV{GIT_BRANCH}-$ENV{BITS}/seqan")
@@ -254,9 +89,6 @@ set (CTEST_BINARY_TEST_DIRECTORY "${CTEST_BINARY_DIRECTORY}")
 # ------------------------------------------------------------
 # Set CTest variables for programs.
 # ------------------------------------------------------------
-
-# # Force language to English.
-# SET ($ENV{LC_MESSAGES} "en_EN")
 
 # Give path to CMake.
 set (CTEST_CMAKE_COMMAND cmake)
@@ -309,14 +141,6 @@ if (DEFINED ENV{SEQAN_CMAKE_FIND_ROOT_PATH})
   file (APPEND "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "CMAKE_FIND_ROOT_PATH:INTERNAL=$ENV{SEQAN_CMAKE_FIND_ROOT_PATH}
 ")
 endif (DEFINED ENV{SEQAN_CMAKE_FIND_ROOT_PATH})
-## Give external scripts the chance to set the make command.
-#if (NOT "$ENV{SEQAN_MAKE_PROGRAM}x" STREQUAL "x")
-#  set (SEQAN_MAKE_PROGRAM "$ENV{SEQAN_MAKE_PROGRAM}")
-#endif (NOT "$ENV{SEQAN_MAKE_PROGRAM}x" STREQUAL "x")
-#if (NOT "${SEQAN_MAKE_PROGRAM}x" STREQUAL "x")
-#  file (APPEND "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "CMAKE_MAKE_PROGRAM:STRING=${SEQAN_MAKE_PROGRAM}
-#")
-#endif (NOT "${SEQAN_MAKE_PROGRAM}x" STREQUAL "x")
 
 # When running memory checks then generate debug symbols, otherwise compile
 # in Release mode.
@@ -334,21 +158,6 @@ if (SEQAN_FIND_LIBRARY_USE_LIB64_PATHS_OFF)
 SEQAN_FIND_LIBRARY_USE_LIB64_PATHS_OFF:BOOL=ON")
 endif (SEQAN_FIND_LIBRARY_USE_LIB64_PATHS_OFF)
 
-# ------------------------------------------------------------
-# Set environment variables.
-# ------------------------------------------------------------
-
-# set (SEQAN_CTEST_ENVIRONMENT "")
-# 
-# # Copy ARCH from current environment variable such that the gcc-wrapper scripts
-# # pick the correct version.
-# if (NOT "$ENV{ARCH}x" STREQUAL "x")
-#   #message("set (SEQAN_CTEST_ENVIRONMENT \"ARCH=$ENV{ARCH}\" ${SEQAN_CTEST_ENVIRONMENT})")
-#   set (SEQAN_CTEST_ENVIRONMENT "ARCH=$ENV{ARCH}" ${SEQAN_CTEST_ENVIRONMENT})
-# endif (NOT "$ENV{ARCH}x" STREQUAL "x")
-# 
-# set (CTEST_ENVIRONMENT ${SEQAN_CTEST_ENVIRONMENT})
-# message("set (CTEST_ENVIRONMENT ${SEQAN_CTEST_ENVIRONMENT})")
 
 # ------------------------------------------------------------
 # Suppress certain warnings.

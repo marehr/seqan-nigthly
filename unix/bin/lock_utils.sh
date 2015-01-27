@@ -1,11 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 
 ## Copyright (C) 2009  Przemyslaw Pawelczyk <przemoc@gmail.com>
 ## License: GNU General Public License v2, v3
 #
 # Lockable script boilerplate
-
-### HEADER ###
 
 ## LOCKFILE HAS TO BE DEFINED EXTERNALLY
 # LOCKFILE="${TESTDIR}/`basename $0`"

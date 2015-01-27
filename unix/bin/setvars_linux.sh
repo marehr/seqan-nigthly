@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Add flags to suppress missing OpenMP warning in nightly builds.
 export CXXFLAGS="${CXXFLAGS} -DSEQAN_IGNORE_MISSING_OPENMP=1"
@@ -16,9 +16,6 @@ else
     # Path to LEMON library.
     export LEMON_ROOT_DIR=/group/ag_abi/software/x86_64/lemon-1.2.3
 fi
-
-# Enable parallel builds.
-#export SEQAN_CTEST_BUILD_FLAGS="-j8"
 
 COMPILERS=${COMPILERS-"g++-4.7 g++-4.8 g++-4.9 g++-5.0 clang++-3.3 clang++-3.4 clang++-3.5"}
 export COMPILERS

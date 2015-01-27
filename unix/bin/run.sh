@@ -97,7 +97,7 @@ echo ""                                 | tee ${LOGFILE}
 # date > "${DEBUGFILE}"
 # env >> "${DEBUGFILE}"
 
-pushd "${DIR}/../cmake" > /dev/null
+cd "${DIR}/../cmake"
 
 ## OBTAIN LOCK OR FAIL
 if exlock; then
@@ -142,5 +142,4 @@ do
     fi
 done
 
-popd > /dev/null
 unlock

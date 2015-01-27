@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Create temporary directory and set TMPDIR to this directory.  Note that the
 # user can specify a TMPDIR before sourcing this script and the created
