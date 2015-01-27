@@ -68,24 +68,24 @@ LOGFILE="${DIR}/../log/meta_${METANAME}.log"
 LOCKFILE="${DIR}/../log/meta_${METANAME}.lock"
 
 ## Some diagnostics
-echo "NIGHTLY BUILD SCRIPT FOR SEQAN"   | tee ${LOGFILE}
-echo ""                                 | tee ${LOGFILE}
-echo "Variables set to:"                | tee ${LOGFILE}
-echo " GIT_BRANCH:     $GIT_BRANCH"     | tee ${LOGFILE}
-echo " PLATFORM:       $PLATFORM"       | tee ${LOGFILE}
-echo " BITS:           $BITS"           | tee ${LOGFILE}
-echo " COMPILERS:      $COMPILERS"      | tee ${LOGFILE}
-echo " COMPILER_FLAGS: $COMPILER_FLAGS" | tee ${LOGFILE}
-echo " WITH_MEMCHECK   $WITH_MEMCHECK"  | tee ${LOGFILE}
-echo " WITH_COVERAGE   $WITH_COVERAGE"  | tee ${LOGFILE}
+echo "NIGHTLY BUILD SCRIPT FOR SEQAN"   | tee -a ${LOGFILE}
+echo ""                                 | tee -a ${LOGFILE}
+echo "Variables set to:"                | tee -a ${LOGFILE}
+echo " GIT_BRANCH:     $GIT_BRANCH"     | tee -a ${LOGFILE}
+echo " PLATFORM:       $PLATFORM"       | tee -a ${LOGFILE}
+echo " BITS:           $BITS"           | tee -a ${LOGFILE}
+echo " COMPILERS:      $COMPILERS"      | tee -a ${LOGFILE}
+echo " COMPILER_FLAGS: $COMPILER_FLAGS" | tee -a ${LOGFILE}
+echo " WITH_MEMCHECK   $WITH_MEMCHECK"  | tee -a ${LOGFILE}
+echo " WITH_COVERAGE   $WITH_COVERAGE"  | tee -a ${LOGFILE}
 echo ""
-echo " HOSTBITS:       $HOSTBITS"       | tee ${LOGFILE}
-echo " TMPDIR:         $TMPDIR"         | tee ${LOGFILE}
-echo " TESTROOT:       $TESTROOT"       | tee ${LOGFILE}
-echo " LOGFILE:        $LOGFILE"        | tee ${LOGFILE}
-echo " LOCKFILE:       $LOCKFILE"       | tee ${LOGFILE}
-echo " THREADS:        $THREADS"        | tee ${LOGFILE}
-echo ""                                 | tee ${LOGFILE}
+echo " HOSTBITS:       $HOSTBITS"       | tee -a ${LOGFILE}
+echo " TMPDIR:         $TMPDIR"         | tee -a ${LOGFILE}
+echo " TESTROOT:       $TESTROOT"       | tee -a ${LOGFILE}
+echo " LOGFILE:        $LOGFILE"        | tee -a ${LOGFILE}
+echo " LOCKFILE:       $LOCKFILE"       | tee -a ${LOGFILE}
+echo " THREADS:        $THREADS"        | tee -a ${LOGFILE}
+echo ""                                 | tee -a ${LOGFILE}
 
 ## TODO check for validity?
 
@@ -101,14 +101,14 @@ cd "${DIR}/../cmake"
 
 ## OBTAIN LOCK OR FAIL
 if exlock; then
-    echo "Could not obtain lock!" | tee ${LOGFILE}
-    echo "Path to lock file is ${LOCKFILE}" | tee ${LOGFILE}
+    echo "Could not obtain lock!" | tee -a ${LOGFILE}
+    echo "Path to lock file is ${LOCKFILE}" | tee -a ${LOGFILE}
     exit 1
 fi
 
 ## RUN THE BUILDS AND TESTS
 if [ "${COMPILERS}" = "" ]; then
-    echo 'No $COMPILERS have been set, so nothing will be done.' | tee ${LOGFILE}
+    echo 'No $COMPILERS have been set, so nothing will be done.' | tee -a ${LOGFILE}
     exit 1
 fi
 
@@ -118,25 +118,25 @@ do
     COMPILER_ABS=$(which "$COMPILER") # make path absolut
     if [ $? -eq 0 ]
     then
-        echo "Running CTEST for $COMPILER " | tee ${LOGFILE}
+        echo "Running CTEST for $COMPILER " | tee -a ${LOGFILE}
 
         ## replace last occurrence of "clang++" with "clang" and "g++" with "gcc"
-        CCOMPILER_ABS=$(echo  $COMPILER_ABS | rev | sed -e 's|++gnalc|gnalc|' -e 's|++g|ccg|'| rev)
+        CCOMPILER_ABS=$(echo $COMPILER_ABS | rev | sed -e 's|++gnalc|gnalc|' -e 's|++g|ccg|'| rev)
         export BUILDNAME="${PLATFORM}_${COMPILER}_${BITS}"
         [ $WITH_MEMCHECK -ne 0 ] && export BUILDNAME="${BUILDNAME}_memcheck"
         [ $WITH_COVERAGE -ne 0 ] && export BUILDNAME="${BUILDNAME}_coverage"
         CTEST_LOGFILE="${DIR}/../log/ctest_${GIT_BRANCH}_${BUILDNAME}.log"
 
-        echo " Path to CC:   $CCOMPILER_ABS" | tee ${LOGFILE}
-        echo " Path to CXX:  $COMPILER_ABS"  | tee ${LOGFILE}
-        echo " BUILDNAME:    $BUILDNAME"     | tee ${LOGFILE}
-        echo " CTestLogfile: $CTEST_LOGFILE" | tee ${LOGFILE}
-        echo " Start time:   $(date)"        | tee ${LOGFILE}
+        echo " Path to CC:   $CCOMPILER_ABS" | tee -a ${LOGFILE}
+        echo " Path to CXX:  $COMPILER_ABS"  | tee -a ${LOGFILE}
+        echo " BUILDNAME:    $BUILDNAME"     | tee -a ${LOGFILE}
+        echo " CTestLogfile: $CTEST_LOGFILE" | tee -a ${LOGFILE}
+        echo " Start time:   $(date)"        | tee -a ${LOGFILE}
 
         CXX="${COMPILER_ABS} ${COMPILER_FLAGS}" CC="${CCOMPILER_ABS} ${COMPILER_FLAGS}" ctest -S seqan_unix.cmake -VV -d > ${CTEST_LOGFILE} 2>&1
 
-        echo " Return value: $?"             | tee ${LOGFILE}
-        echo " Finish time:  $(date)"        | tee ${LOGFILE}
+        echo " Return value: $?"             | tee -a ${LOGFILE}
+        echo " Finish time:  $(date)"        | tee -a ${LOGFILE}
     else
         echo "Compiler ${COMPILER} not found; skipping."
     fi
