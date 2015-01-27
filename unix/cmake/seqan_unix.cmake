@@ -59,10 +59,16 @@ set (CTEST_CMAKE_GENERATOR "Unix Makefiles")
 set (CTEST_BUILD_NAME "$ENV{BUILDNAME}")
 set (CTEST_SITE "${FULL_HOSTNAME}")
 
-# TODO(h4nn3s): do we really have CTEST_TIMEOUT and CTEST_TEST_TIMEOUT?
-set (CTEST_TIMEOUT "600")
+set (CTEST_NIGHTLY_START_TIME "00:00:00 UTC")
+set (CTEST_DROP_METHOD "http")
+set (CTEST_DROP_SITE "cdash.seqan.de")
+set (CTEST_DROP_LOCATION "/submit.php?project=SeqAn")
+set (CTEST_DROP_SITE_CDASH TRUE)
+
+
+set (CTEST_TIMEOUT 600)
 if (${CTEST_BUILD_NAME} MATCHES ".*memcheck.*")
-    set (CTEST_TEST_TIMEOUT 7200)
+    set (CTEST_TIMEOUT 7200)
 endif (${CTEST_BUILD_NAME} MATCHES ".*memcheck.*")
 
 # Increase reported warning and error count.
@@ -77,6 +83,7 @@ set (CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 1000)
 # but since multiple scripts might run in parallel they might conflict
 # TODO(h4nn3s) move git clone and update into the sh script where locking
 # can be used to prevent multiple checkout dirs
+# WARNING then the changed files feature won't work, so maybe not.
 
 # The Git checkout goes here.
 set (CTEST_SOURCE_ROOT_DIRECTORY "$ENV{TESTROOT}/co-git-$ENV{GIT_BRANCH}-$ENV{BITS}/seqan")
@@ -158,7 +165,6 @@ if (SEQAN_FIND_LIBRARY_USE_LIB64_PATHS_OFF)
 SEQAN_FIND_LIBRARY_USE_LIB64_PATHS_OFF:BOOL=ON")
 endif (SEQAN_FIND_LIBRARY_USE_LIB64_PATHS_OFF)
 
-
 # ------------------------------------------------------------
 # Suppress certain warnings.
 # ------------------------------------------------------------
@@ -191,13 +197,6 @@ endif ($ENV{GIT_BRANCH} STREQUAL "develop")
 # endif (${CTEST_BUILD_NAME} MATCHES ".*memcheck.*")
 
 CTEST_START ("Nightly" TRACK ${TRAK})
-
-# Copying the CTestConfig.cmake here is not optimal.  You might have to call
-# ctest twice to get an actual build since ctest expects it to be present
-# at the first time and will fail.
-CONFIGURE_FILE (${CTEST_SOURCE_DIRECTORY}/util/cmake/CTestConfig.cmake
-                ${CTEST_SOURCE_ROOT_DIRECTORY}/CTestConfig.cmake
-                COPYONLY)
 
 # Update from repository, configure, build, test, submit.  These commands will
 # get all necessary information from the CTEST_* variables set above.
