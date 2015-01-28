@@ -21,23 +21,13 @@ export LANG=C
 export LC_ALL=C
 export LC_MESSAGES="en_EN"
 
+## for TMPDIR creation and cleanup
+. "${DIR}/misc.sh"
+
 ## passing any argument will print debug and exit
 if [ $# -gt 0 ]; then
-    echo "The following environment variables can be set to influence this script:"
-    echo "    BITS           32 or 64 (64 by default)"
-    echo "    GIT_BRANCH     master, develop or a valid branch name (develop by default)"
-    echo "    COMPILERS      list of compiler-binaries to use"
-    echo "    COMPILER_FLAGS flags to append to the compiler calls"
-    echo "    WITH_MEMCHECK  if set to anything CTEST will perform memchecks"
-    echo "    WITH_COVERAGE  if set to anything CTEST will perform coverage checks"
-    echo "    TMPDIR         place to store temporary files of run (will be pruned after"
-    echo "                   run; defaults to /tmp)"
-    echo "    TESTROOT        The place checkouts and builds take place (if unset defaults"
-    echo "                   to TMPDIR, which means it will be pruned; otherwise it will "
-    echo "                   be reused on next run)"
-    echo "    THREADS       number of threads to use (defaults to 1)"
-    echo ""
-    exit 0;
+    usage
+    exit 0
 fi
 
 ## contains operating system dependent stuff
@@ -47,18 +37,14 @@ fi
 export THREADS=${THREADS-1}
 export WITH_MEMCHECK=${WITH_MEMCHECK-0}
 export WITH_COVERAGE=${WITH_COVERAGE-0}
+export MODEL=${MODEL-"Experimental"}
 
 ## set dirs if not done so by user or source'd script
 export TMPDIR=${TMPDIR-"/tmp"}
 export TESTROOT=${TESTROOT-${TMPDIR}}
 
-## for TMPDIR creation and cleanup
-. "${DIR}/mktemp.sh"
-
 ## make sure directories exist
-mkdir -p "${TMPDIR}"
-mkdir -p "${TESTROOT}"
-mkdir -p "${DIR}/../log"
+dirs
 
 ## global log and lockfile
 export METANAME="${GIT_BRANCH}_${PLATFORM}_${BITS}"
@@ -68,39 +54,12 @@ LOGFILE="${DIR}/../log/meta_${METANAME}.log"
 LOCKFILE="${DIR}/../log/meta_${METANAME}.lock"
 
 ## Some diagnostics
-echo "NIGHTLY BUILD SCRIPT FOR SEQAN"   | tee -a ${LOGFILE}
-echo ""                                 | tee -a ${LOGFILE}
-echo "Variables set to:"                | tee -a ${LOGFILE}
-echo " GIT_BRANCH:     $GIT_BRANCH"     | tee -a ${LOGFILE}
-echo " PLATFORM:       $PLATFORM"       | tee -a ${LOGFILE}
-echo " BITS:           $BITS"           | tee -a ${LOGFILE}
-echo " COMPILERS:      $COMPILERS"      | tee -a ${LOGFILE}
-echo " COMPILER_FLAGS: $COMPILER_FLAGS" | tee -a ${LOGFILE}
-echo " WITH_MEMCHECK   $WITH_MEMCHECK"  | tee -a ${LOGFILE}
-echo " WITH_COVERAGE   $WITH_COVERAGE"  | tee -a ${LOGFILE}
-echo ""
-echo " HOSTBITS:       $HOSTBITS"       | tee -a ${LOGFILE}
-echo " TMPDIR:         $TMPDIR"         | tee -a ${LOGFILE}
-echo " TESTROOT:       $TESTROOT"       | tee -a ${LOGFILE}
-echo " LOGFILE:        $LOGFILE"        | tee -a ${LOGFILE}
-echo " LOCKFILE:       $LOCKFILE"       | tee -a ${LOGFILE}
-echo " THREADS:        $THREADS"        | tee -a ${LOGFILE}
-echo ""                                 | tee -a ${LOGFILE}
-
-## TODO check for validity?
-
-## for acquiring lock
-. "${DIR}/lock_utils.sh"
-
-## DEBUG
-# DEBUGFILE="${DIR}/../log/$((env; date) | sha256sum | awk ' {print $1}').debug"
-# date > "${DEBUGFILE}"
-# env >> "${DEBUGFILE}"
+diagnostics
 
 cd "${DIR}/../cmake"
 
 ## OBTAIN LOCK OR FAIL
-if exlock; then
+if lock; then
     echo "Could not obtain lock!" | tee -a ${LOGFILE}
     echo "Path to lock file is ${LOCKFILE}" | tee -a ${LOGFILE}
     exit 1
@@ -142,4 +101,4 @@ do
     fi
 done
 
-unlock
+cleanUP
