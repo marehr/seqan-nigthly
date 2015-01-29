@@ -58,7 +58,13 @@ LOCKFILE="${DIR}/../log/meta_${METANAME}.lock"
 ## Some diagnostics
 diagnostics
 
-cd "${DIR}/../cmake"
+## source a python virtualenv if found in the correct place
+if [ -f "${DIR}/../../virtualenv/bin/activate" ]; then
+    echo "Sourcing virtualenv..." | tee -a ${LOGFILE}
+    echo ""                       | tee -a ${LOGFILE}
+    . "${DIR}/../../virtualenv/bin/activate"
+fi
+
 
 ## OBTAIN LOCK OR FAIL
 if lock; then
@@ -66,6 +72,8 @@ if lock; then
     echo "Path to lock file is ${LOCKFILE}" | tee -a ${LOGFILE}
     exit 1
 fi
+
+cd "${DIR}/../cmake"
 
 ## RUN THE BUILDS AND TESTS
 if [ "${COMPILERS}" = "" ]; then

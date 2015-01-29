@@ -17,5 +17,4 @@ else
     export LEMON_ROOT_DIR=/group/ag_abi/software/x86_64/lemon-1.2.3
 fi
 
-COMPILERS=${COMPILERS-"g++-4.7 g++-4.8 g++-4.9 g++-5.0 clang++-3.3 clang++-3.4 clang++-3.5"}
-export COMPILERS
+export COMPILERS=${COMPILERS-"g++-4.7 g++-4.8 g++-4.9 clang++-3.3 clang++-3.4 clang++-3.5"}
