@@ -68,5 +68,3 @@ _createTrap()
 {
     trap cleanUP EXIT TERM INT KILL QUIT HUP SEGV PIPE
 }
-
-_createTrap

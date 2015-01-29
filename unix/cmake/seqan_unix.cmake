@@ -32,6 +32,10 @@ if (NOT DEFINED ENV{HOSTBITS})
     message (FATAL_ERROR "No HOSTBITS defined (host bit size, should be 32 or 64)")
 endif (NOT DEFINED ENV{HOSTBITS})
 
+if (NOT DEFINED ENV{MODEL})
+    message (FATAL_ERROR "No MODEL defined (Nightly, Experimental or Continuous)")
+endif (NOT DEFINED ENV{MODEL})
+
 if (NOT ENV{BITS} EQUAL ENV{HOSTBITS})
     set($ENV{CC} "$ENV{CC} -m$ENV{BITS}")
     set($ENV{CXX} "$ENV{CXX} -m$ENV{BITS}")
@@ -44,6 +48,18 @@ endif (NOT ENV{BITS} EQUAL ENV{HOSTBITS})
 if (DEFINED ENV{THREADS})
     set (CTEST_BUILD_FLAGS "-j $ENV{THREADS}")
 endif (DEFINED ENV{THREADS})
+
+# if ($ENV{GIT_BRANCH} STREQUAL "develop")
+#     set(TRAK "BranchDevelop")
+# else ($ENV{GIT_BRANCH} STREQUAL "develop")
+#     set(TRAK "BranchMaster")
+# endif ($ENV{GIT_BRANCH} STREQUAL "develop")
+
+# if (DEFINED ENV{IS_NIGHTLY})
+#     set(TRAK  "${TRAK}Nightly")
+# else (DEFINED ENV{IS_NIGHTLY})
+#     set(TRAK  "${TRAK}Manual")
+# endif (DEFINED ENV{IS_NIGHTLY})
 
 # ------------------------------------------------------------
 # Set CTest variables describing the build.
@@ -65,7 +81,6 @@ set (CTEST_DROP_SITE "cdash.seqan.de")
 set (CTEST_DROP_LOCATION "/submit.php?project=SeqAn")
 set (CTEST_DROP_SITE_CDASH TRUE)
 
-
 set (CTEST_TIMEOUT 600)
 if (${CTEST_BUILD_NAME} MATCHES ".*memcheck.*")
     set (CTEST_TIMEOUT 7200)
@@ -86,11 +101,11 @@ set (CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 1000)
 # WARNING then the changed files feature won't work, so maybe not.
 
 # The Git checkout goes here.
-set (CTEST_SOURCE_ROOT_DIRECTORY "$ENV{TESTROOT}/co-git-$ENV{GIT_BRANCH}-$ENV{BITS}/seqan")
-set (CTEST_SOURCE_DIRECTORY "$ENV{TESTROOT}/co-git-$ENV{GIT_BRANCH}-$ENV{BITS}/seqan")
+set (CTEST_SOURCE_ROOT_DIRECTORY "$ENV{TESTROOT}/checkout-$ENV{GIT_BRANCH}/${CTEST_BUILD_NAME}")
+set (CTEST_SOURCE_DIRECTORY "${CTEST_SOURCE_ROOT_DIRECTORY}")
 
 # Set build directory and directory to run tests in.
-set (CTEST_BINARY_DIRECTORY "$ENV{TESTROOT}/build-git-$ENV{GIT_BRANCH}/${CTEST_BUILD_NAME}")
+set (CTEST_BINARY_DIRECTORY "$ENV{TESTROOT}/build-$ENV{GIT_BRANCH}/${CTEST_BUILD_NAME}")
 set (CTEST_BINARY_TEST_DIRECTORY "${CTEST_BINARY_DIRECTORY}")
 
 # ------------------------------------------------------------
@@ -185,22 +200,17 @@ set (CTEST_CUSTOM_WARNING_EXCEPTION
 # ------------------------------------------------------------
 
 ## -- Start
-message(" -- Start dashboard Nightly - ${CTEST_BUILD_NAME} --")
-if ($ENV{GIT_BRANCH} STREQUAL "develop")
-    set(TRAK "BranchDevelop")
-else ($ENV{GIT_BRANCH} STREQUAL "develop")
-    set(TRAK "BranchMaster")
-endif ($ENV{GIT_BRANCH} STREQUAL "develop")
+message(" -- Start dashboard $ENV{MODEL} - ${CTEST_BUILD_NAME} --")
 
 # if (${CTEST_BUILD_NAME} MATCHES ".*memcheck.*")
 #     append sth to TRAK?
 # endif (${CTEST_BUILD_NAME} MATCHES ".*memcheck.*")
 
-CTEST_START ("Nightly" TRACK ${TRAK})
+CTEST_START ($ENV{MODEL} TRACK "$ENV{MODEL}-$ENV{GIT_BRANCH}")
 
 # Update from repository, configure, build, test, submit.  These commands will
 # get all necessary information from the CTEST_* variables set above.
-message(" -- Update Nightly - ${CTEST_BUILD_NAME} --")
+message(" -- Update $ENV{MODEL} - ${CTEST_BUILD_NAME} --")
 CTEST_UPDATE    (RETURN_VALUE VAL)
 CTEST_CONFIGURE ()
 CTEST_BUILD     ()

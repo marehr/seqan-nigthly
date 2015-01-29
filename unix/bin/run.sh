@@ -21,8 +21,10 @@ export LANG=C
 export LC_ALL=C
 export LC_MESSAGES="en_EN"
 
-## for TMPDIR creation and cleanup
+## load some functions
 . "${DIR}/misc.sh"
+## create trap fro sigs
+_createTrap
 
 ## passing any argument will print debug and exit
 if [ $# -gt 0 ]; then
