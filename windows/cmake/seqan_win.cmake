@@ -245,11 +245,7 @@ endif ()
 # Perform the actual tests.
 # ------------------------------------------------------------
 
-if (SEQAN_GIT_BRANCH STREQUAL "develop")
-  CTEST_START (${SEQAN_CTEST_MODEL} TRACK BranchDevelop)
-else (SEQAN_GIT_BRANCH STREQUAL "develop")
-  CTEST_START (${SEQAN_CTEST_MODEL} TRACK BranchMaster)
-endif (SEQAN_GIT_BRANCH STREQUAL "develop")
+CTEST_START (${SEQAN_CTEST_MODEL} TRACK "${SEQAN_CTEST_MODEL}-${SEQAN_GIT_BRANCH}")
 
 # Copying the CTestConfig.cmake here is not optimal.  You might have to call
 # ctest twice to get an actual build since ctest expects it to be present
