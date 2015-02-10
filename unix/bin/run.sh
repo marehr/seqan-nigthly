@@ -23,7 +23,7 @@ export LC_MESSAGES="en_EN"
 
 ## load some functions
 . "${DIR}/misc.sh"
-## create trap fro sigs
+## create trap for sigs
 _createTrap
 
 ## passing any argument will print debug and exit

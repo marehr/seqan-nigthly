@@ -36,17 +36,18 @@ if (NOT DEFINED ENV{MODEL})
     message (FATAL_ERROR "No MODEL defined (Nightly, Experimental or Continuous)")
 endif (NOT DEFINED ENV{MODEL})
 
-if (NOT ENV{BITS} EQUAL ENV{HOSTBITS})
-    set($ENV{CC} "$ENV{CC} -m$ENV{BITS}")
-    set($ENV{CXX} "$ENV{CXX} -m$ENV{BITS}")
-endif (NOT ENV{BITS} EQUAL ENV{HOSTBITS})
+if (NOT $ENV{BITS} EQUAL $ENV{HOSTBITS})
+    # setting CMAKE_CXX_FLAGS here doesnt work because they are overwritten later
+    set(ENV{CFLAGS} "$ENV{CFLAGS} -m$ENV{BITS}")
+    set(ENV{CXXFLAGS} "$ENV{CXXFLAGS} -m$ENV{BITS}")
+endif (NOT $ENV{BITS} EQUAL $ENV{HOSTBITS})
 
 # ---------------------------------------------------------------------------
 # OPTIONAL VARIABLES
 # ---------------------------------------------------------------------------
 
 if (DEFINED ENV{THREADS})
-    set (CTEST_BUILD_FLAGS "-j $ENV{THREADS}")
+    set (CTEST_BUILD_FLAGS "${CTEST_BUILD_FLAGS} -j $ENV{THREADS}")
 endif (DEFINED ENV{THREADS})
 
 # if ($ENV{GIT_BRANCH} STREQUAL "develop")
