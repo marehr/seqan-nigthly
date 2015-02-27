@@ -90,6 +90,7 @@ set (CTEST_CONFIGURATION_TYPE ${CTEST_BUILD_CONFIGURATION})
 if (WIN32)
   # On Window System.
 
+  # TODO(rrahn): MinGW makefiles not supported! Can this be removed?
   if (SEQAN_CTEST_GENERATOR STREQUAL "MinGW Makefiles")
     set (SEQAN_CTEST_GENERATOR_SHORT "mingw")
   else (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio")
@@ -177,14 +178,14 @@ SET ($ENV{LC_MESSAGES} "en_EN")
 
 # Give path to CMake.
 set (CTEST_CMAKE_COMMAND cmake)
-# Give path to SVN and the checkout command.
+# Give path to git and the checkout command.
 # TODO(holtgrew): The path to tortoise svn could also come from batch script.
 find_program (CTEST_GIT_COMMAND
               NAMES git
               HINTS "C:/Program Files (x86)/Git/bin"
                     "C:/Program Files/Git/bin")
 if (NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")
-  set (CTEST_CHECKOUT_COMMAND "${CTEST_GIT_COMMAND} clone -b ${SEQAN_GIT_BRANCH} https://github.com/seqan/seqan.git ${CTEST_SOURCE_DIRECTORY}")
+  set (CTEST_CHECKOUT_COMMAND "${CTEST_GIT_COMMAND} clone -b ${SEQAN_GIT_BRANCH} https://github.com/seqan/seqan.git ${CTEST_SOURCE_DIRECTORY} --recursive")
 endif ()
 set (CTEST_UPDATE_COMMAND "${CTEST_GIT_COMMAND}")
 
