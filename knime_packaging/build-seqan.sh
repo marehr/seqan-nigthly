@@ -8,7 +8,7 @@ SCRIPT_PATH=`dirname $0`
 source ${SCRIPT_PATH}/config.sh
 source ${SCRIPT_PATH}/functions.sh
 
-# update seqan 
+# update seqan
 git_update $SEQAN_SOURCE master
 
 # clear old plugin sources
