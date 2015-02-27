@@ -14,6 +14,7 @@ function git_update {
 
   git fetch
   git merge --ff-only origin/$2
+  git submodule update --init --recursive
 
 	popd > /dev/null
 }
