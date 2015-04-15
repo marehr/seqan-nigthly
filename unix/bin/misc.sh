@@ -55,13 +55,14 @@ dirs()
 
 lock()
 {
-    ! lockfile -r 0 ${LOCKFILE}
+    # this fails if "lockdir" already exists
+    ! mkdir "$LOCKFILE"
 }
 
 cleanUP()
 {
-    rm -f  "$LOCKFILE"
-    rm -rf "$TMPDDIR"
+    rmdir  "$LOCKFILE" 2>/dev/null
+    rm -rf "$TMPDIR"
 }
 
 _createTrap()

@@ -23,8 +23,6 @@ export LC_MESSAGES="en_EN"
 
 ## load some functions
 . "${DIR}/misc.sh"
-## create trap for sigs
-_createTrap
 
 ## passing any argument will print debug and exit
 if [ $# -gt 0 ]; then
@@ -47,6 +45,9 @@ export TESTROOT=${TESTROOT-${TMPDIR}}
 
 ## make sure directories exist
 dirs
+
+## create trap for sigs (need to do this after dirs, so the trap won't delete the top-level tmp
+_createTrap
 
 ## global log and lockfile
 export METANAME="${GIT_BRANCH}_${PLATFORM}_${BITS}"
