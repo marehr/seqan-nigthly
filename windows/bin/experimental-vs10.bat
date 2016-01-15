@@ -3,7 +3,7 @@ call setvars-experimental.bat
 
 pushd c:\seqan-nightly\cmake
 REM call ctest -S seqan_win_vs11.cmake,branch=master,Experimental  -VV | mtee c:\seqan-nightly\log\seqan-experimental-master-vs11.log
-call ctest -S seqan_win_vs10.cmake,branch=master,Experimental  -VV | mtee c:\seqan-nightly\log\seqan-experimental-master-vs10.log
+REM call ctest -S seqan_win_vs10.cmake,branch=master,Experimental  -VV | mtee c:\seqan-nightly\log\seqan-experimental-master-vs10.log
 REM call ctest -S seqan_win_vs9.cmake,branch=master,Experimental   -VV | mtee c:\seqan-nightly\log\seqan-experimental-master-vs9.log
 REM call ctest -S seqan_win_vs8.cmake,branch=master,Experimental   -VV | mtee c:\seqan-nightly\log\seqan-experimental-master-vs8.log
 REM call ctest -S seqan_win_mingw.cmake,branch=master,Experimental -VV | mtee c:\seqan-nightly\log\seqan-experimental-master-mingw.log
