@@ -110,6 +110,8 @@ if (WIN32)
       set (SEQAN_CTEST_GENERATOR_SHORT "VS11")
     elseif (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 12.*")
       set (SEQAN_CTEST_GENERATOR_SHORT "VS12")
+    elseif (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 14.*")
+      set (SEQAN_CTEST_GENERATOR_SHORT "VS14")
     else (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 8.*")
       message (FATAL_ERROR "Unknown generator ${SEQAN_CTEST_GENERATOR}")
     endif (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 8.*")
@@ -164,10 +166,12 @@ SET (CTEST_PROJECT_NAME "SeqAn")
 # The Git checkout goes here.
 set (CTEST_SOURCE_ROOT_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/co-git-${SEQAN_GIT_BRANCH}/seqan-${SEQAN_CTEST_MODEL}-${SEQAN_CTEST_PTRWIDTH}")
 set (CTEST_SOURCE_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/co-git-${SEQAN_GIT_BRANCH}/seqan-${SEQAN_CTEST_MODEL}-${SEQAN_CTEST_PTRWIDTH}")
+message (STATUS "CTEST_SOURCE_DIRECTORY = ${CTEST_SOURCE_DIRECTORY}")
 
 # Set build directory and directory to run tests in.
 set (CTEST_BINARY_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/build-git-${SEQAN_GIT_BRANCH}/${CTEST_BUILD_NAME}")
 set (CTEST_BINARY_TEST_DIRECTORY "${CTEST_BINARY_DIRECTORY}")
+message (STATUS "CTEST_BINARY_DIRECTORY = ${CTEST_SOURCE_DIRECTORY}")
 
 # ------------------------------------------------------------
 # Set CTest variables for programs.
@@ -188,6 +192,7 @@ if (NOT EXISTS "${CTEST_SOURCE_DIRECTORY}")
   set (CTEST_CHECKOUT_COMMAND "${CTEST_GIT_COMMAND} clone -b ${SEQAN_GIT_BRANCH} https://github.com/seqan/seqan.git ${CTEST_SOURCE_DIRECTORY} --recursive")
 endif ()
 set (CTEST_UPDATE_COMMAND "${CTEST_GIT_COMMAND}")
+message (STATUS " -- CTEST_CHECKOUT_COMMAND ${CTEST_CHECKOUT_COMMAND}")
 
 # ------------------------------------------------------------
 # Preparation of the binary directory.
@@ -246,6 +251,7 @@ endif ()
 # Perform the actual tests.
 # ------------------------------------------------------------
 
+message (STATUS " -- Start ctest: ${SEQAN_CTEST_MODEL} track ${SEQAN_CTEST_MODEL}-${SEQAN_GIT_BRANCH}")
 CTEST_START (${SEQAN_CTEST_MODEL} TRACK "${SEQAN_CTEST_MODEL}-${SEQAN_GIT_BRANCH}")
 
 # Copying the CTestConfig.cmake here is not optimal.  You might have to call
