@@ -10,5 +10,9 @@ export CXXFLAGS="${CXXFLAGS} -DSEQAN_IGNORE_MISSING_OPENMP=1"
 export PATH=/opt/local/bin:/opt/local/sbin:/usr/local/cuda/bin:/usr/usr/bin/:$PATH
 
 ## set of default compilers if not overwritten on CL
-export COMPILERS=${COMPILERS-"clang++ g++-mp-4.7 g++-mp-4.8 g++-mp-4.9 clang++-mp-3.3 clang++-mp-3.4 clang++-mp-3.5"}
+if [ "$GIT_BRANCH" = "develop" ]; then
+	export COMPILERS=${COMPILERS-"clang++ g++-mp-4.9 g++-mp-5 g++-mp-6 clang++-mp-3.5 clang++-mp-3.6 clang++-mp-3.7"}
+else
+	export COMPILERS=${COMPILERS-"clang++ g++-mp-4.9 g++-mp-5 g++-mp-6 clang++-mp-3.5 clang++-mp-3.6 clang++-mp-3.7"}
+fi
 
