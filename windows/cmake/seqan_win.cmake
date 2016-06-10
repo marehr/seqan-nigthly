@@ -5,7 +5,7 @@
 # Variable ${CTEST_MODEL} comes from command line, this saves 1/2
 # of CMake files.
 
-CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED (VERSION 3)
 cmake_policy (SET CMP0011 NEW)  # Suppress warning about PUSH/POP policy change.
 
 # ---------------------------------------------------------------------------
@@ -29,14 +29,6 @@ else (SEQAN_CTEST_OS MATCHES ".*32bit")
   message (FATAL_ERROR "No information found about number of bits in SEQAN_CTEST_OS.")
   message (FATAL_ERROR "SEQAN_CTEST_OS should look like \"Win7_32bit\", \"WinXP_64bit\"")
 endif (SEQAN_CTEST_OS MATCHES ".*32bit")
-
-if (NOT WIN32)
-  if ("$ENV{CXX}" MATCHES ".* -m32")
-    set (SEQAN_CTEST_PTRWIDTH "32")
-  else ("$ENV{CXX}" MATCHES ".* -m32")
-    set (SEQAN_CTEST_PTRWIDTH "64")
-  endif ("$ENV{CXX}" MATCHES ".* -m32")
-endif (NOT WIN32)
 
 message (STATUS "SEQAN_CTEST_PTRWIDTH is  ${SEQAN_CTEST_PTRWIDTH}")
 
@@ -73,9 +65,9 @@ message (STATUS "SEQAN_GIT_BRANCH is            ${SEQAN_GIT_BRANCH}")
 
 if (${CTEST_SCRIPT_ARG} MATCHES Release)
     set (CTEST_BUILD_CONFIGURATION Debug)
-else (${CTEST_SCRIPT_ARG} MATCHES Release)
+else ()
     set (CTEST_BUILD_CONFIGURATION Release)
-endif (${CTEST_SCRIPT_ARG} MATCHES Release)
+endif ()
 
 # Set CTest configuration type, lately this is necessary so app test can be
 # run when built with VS (they do not correspond directly to targets).
@@ -90,48 +82,28 @@ set (CTEST_CONFIGURATION_TYPE ${CTEST_BUILD_CONFIGURATION})
 if (WIN32)
   # On Window System.
 
-  # TODO(rrahn): MinGW makefiles not supported! Can this be removed?
-  if (SEQAN_CTEST_GENERATOR STREQUAL "MinGW Makefiles")
-    set (SEQAN_CTEST_GENERATOR_SHORT "mingw")
-  else (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio")
+  if (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio")
     # Set ptr width into generator if 64 bit.
     if (SEQAN_CTEST_PTRWIDTH STREQUAL "64")
       set (SEQAN_CTEST_GENERATOR "${SEQAN_CTEST_GENERATOR} Win64")
-    endif (SEQAN_CTEST_PTRWIDTH STREQUAL "64")
+    endif ()
 
     # Determine short generator name.
-    if (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 8.*")
-      set (SEQAN_CTEST_GENERATOR_SHORT "VS8")
-    elseif (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 9.*")
-      set (SEQAN_CTEST_GENERATOR_SHORT "VS9")
-    elseif (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 10.*")
-      set (SEQAN_CTEST_GENERATOR_SHORT "VS10")
-    elseif (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 11.*")
-      set (SEQAN_CTEST_GENERATOR_SHORT "VS11")
-    elseif (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 12.*")
-      set (SEQAN_CTEST_GENERATOR_SHORT "VS12")
-    elseif (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 14.*")
-      set (SEQAN_CTEST_GENERATOR_SHORT "VS14")
-    else (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 8.*")
+    if (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio.*")
+      # SEQAN_CTEST_GENERATOR has the name schema Visual Studio 14 2015,
+      # Visual Studio 12 2013, or Visual Studio 11 2012
+      # Thus match the first digits, e.g. 14, 12, or 11
+      STRING (REGEX REPLACE "Visual Studio ([0-9]+).+" "VS\\1" SEQAN_CTEST_GENERATOR_SHORT "${SEQAN_CTEST_GENERATOR}")
+    else ()
       message (FATAL_ERROR "Unknown generator ${SEQAN_CTEST_GENERATOR}")
-    endif (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio 8.*")
-  endif (SEQAN_CTEST_GENERATOR STREQUAL "MinGW Makefiles")
-else (WIN32)
-  # On Unix System, the environment variable CXX has to be set.
-  if ("$ENV{CXX}x" STREQUAL "x")
-    message (FATAL_ERROR "Environment variable CXX not set.  Cannot determine compiler.")
-  endif ("$ENV{CXX}x" STREQUAL "x")
-
-  if ("$ENV{CXX}" MATCHES ".*(clang\\+\\+-.*)")
-    STRING (REGEX REPLACE ".*(clang\\+\\+-[^ ]*).*" "\\1" SEQAN_CTEST_GENERATOR_SHORT "$ENV{CXX}")
-  elseif ("$ENV{CXX}" MATCHES ".*g\\+\\+-.*")
-    STRING (REGEX REPLACE ".*(g\\+\\+-[^ ]*).*" "\\1" SEQAN_CTEST_GENERATOR_SHORT "$ENV{CXX}")
-  else ("$ENV{CXX}" MATCHES ".*(clang\\+\\+-.*)")
-    message(FATAL_ERROR "Could not determine compiler from \"$ENV{CXX}\"")
-  endif ("$ENV{CXX}" MATCHES ".*(clang\\+\\+-.*)")
-endif (WIN32)
+    endif ()
+  endif ()
+else ()
+  message(FATAL_ERROR "Build windows sources not on windows? Srsly?")
+endif ()
 
 message (STATUS "SEQAN_CTEST_GENERATOR is ${SEQAN_CTEST_GENERATOR}")
+message (STATUS "SEQAN_CTEST_GENERATOR_SHORT is ${SEQAN_CTEST_GENERATOR_SHORT}")
 set (CTEST_CMAKE_GENERATOR ${SEQAN_CTEST_GENERATOR})
 
 # ------------------------------------------------------------
@@ -183,7 +155,6 @@ SET ($ENV{LC_MESSAGES} "en_EN")
 # Give path to CMake.
 set (CTEST_CMAKE_COMMAND cmake)
 # Give path to git and the checkout command.
-# TODO(holtgrew): The path to tortoise svn could also come from batch script.
 find_program (CTEST_GIT_COMMAND
               NAMES git
               HINTS "C:/Program Files (x86)/Git/bin"
@@ -216,12 +187,7 @@ CTEST_EMPTY_BINARY_DIRECTORY (${CTEST_BINARY_DIRECTORY})
 file (WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "
 CMAKE_BUILD_TYPE:STRING=${CTEST_BUILD_CONFIGURATION}
 CMAKE_GENERATOR:INTERNAL=${CTEST_CMAKE_GENERATOR}
-SEQAN_ENABLE_CUDA:BOOL=OFF
 ")
-
-if (SEQAN_CTEST_GENERATOR STREQUAL "MinGW Makefiles")
-  set (CTEST_BUILD_FLAGS -j4)
-endif ()
 
 # ------------------------------------------------------------
 # Suppress certain warnings.
