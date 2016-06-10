@@ -79,27 +79,21 @@ set (CTEST_CONFIGURATION_TYPE ${CTEST_BUILD_CONFIGURATION})
 # store the compiler and version.
 # ---------------------------------------------------------------------------
 
-if (WIN32)
-  # On Window System.
-
-  if (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio")
-    # Set ptr width into generator if 64 bit.
-    if (SEQAN_CTEST_PTRWIDTH STREQUAL "64")
-      set (SEQAN_CTEST_GENERATOR "${SEQAN_CTEST_GENERATOR} Win64")
-    endif ()
-
-    # Determine short generator name.
-    if (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio.*")
-      # SEQAN_CTEST_GENERATOR has the name schema Visual Studio 14 2015,
-      # Visual Studio 12 2013, or Visual Studio 11 2012
-      # Thus match the first digits, e.g. 14, 12, or 11
-      STRING (REGEX REPLACE "Visual Studio ([0-9]+).+" "VS\\1" SEQAN_CTEST_GENERATOR_SHORT "${SEQAN_CTEST_GENERATOR}")
-    else ()
-      message (FATAL_ERROR "Unknown generator ${SEQAN_CTEST_GENERATOR}")
-    endif ()
+if (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio")
+  # Set ptr width into generator if 64 bit.
+  if (SEQAN_CTEST_PTRWIDTH STREQUAL "64")
+    set (SEQAN_CTEST_GENERATOR "${SEQAN_CTEST_GENERATOR} Win64")
   endif ()
-else ()
-  message(FATAL_ERROR "Build windows sources not on windows? Srsly?")
+
+  # Determine short generator name.
+  if (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio.*")
+    # SEQAN_CTEST_GENERATOR has the name schema Visual Studio 14 2015,
+    # Visual Studio 12 2013, or Visual Studio 11 2012
+    # Thus match the first digits, e.g. 14, 12, or 11
+    STRING (REGEX REPLACE "Visual Studio ([0-9]+).+" "VS\\1" SEQAN_CTEST_GENERATOR_SHORT "${SEQAN_CTEST_GENERATOR}")
+  else ()
+    message (FATAL_ERROR "Unknown generator ${SEQAN_CTEST_GENERATOR}")
+  endif ()
 endif ()
 
 message (STATUS "SEQAN_CTEST_GENERATOR is ${SEQAN_CTEST_GENERATOR}")
