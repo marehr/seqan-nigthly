@@ -5,7 +5,7 @@
 # Variable ${CTEST_MODEL} comes from command line, this saves 1/2
 # of CMake files.
 
-CMAKE_MINIMUM_REQUIRED (VERSION 3)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.0)
 cmake_policy (SET CMP0011 NEW)  # Suppress warning about PUSH/POP policy change.
 
 # ---------------------------------------------------------------------------
