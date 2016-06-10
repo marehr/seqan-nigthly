@@ -205,14 +205,6 @@ set (CTEST_CUSTOM_WARNING_EXCEPTION
     "compatibility.h:.*: note:.*pragma message: slow.*64"
     "compatibility.h:.*: note:.*pragma message: slow.*64")
 
-if (SEQAN_CTEST_GENERATOR STREQUAL "MinGW Makefiles")
-  set (CTEST_CUSTOM_WARNING_EXCEPTION ${CTEST_CUSTOM_WARNING_EXCEPTION}
-       # Suppress false positive warning in test_index_crosscompare_char_dfi.
-       # We have other builds with GCC than the MinGW build so suppressing this
-       # here will not make the error be swallowed up everywhere.
-       ".*array_construct_destruct.h:1183.*array subscript.*")
-endif ()
-
 # ------------------------------------------------------------
 # Perform the actual tests.
 # ------------------------------------------------------------
