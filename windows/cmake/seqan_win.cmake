@@ -198,15 +198,20 @@ CTEST_EMPTY_BINARY_DIRECTORY (${CTEST_BINARY_DIRECTORY})
 # Comments:
 #
 #   CMAKE_GENERATOR -- pass the generator
-#      TODO(holtgrew): Neccesary?
-#   CMAKE_BUILD_TYPE -- The build type.  We set this to Release since
-#     the compiler tries its best to understand the code and unearths
-#     some warning types only in this build type.
+#   CMAKE_BUILD_TYPE -- The build type.  We set this to Release since the
+#     compiler tries its best to understand the code and unearths some warning
+#     types only in this build type.
 #   CMAKE_CXX_FLAGS -- C++ compiler flags.
+#   SEQAN_DEFINITIONS -- To add multiple definitions, comma seperate them like
+#     IMPORTANT: Don't forget the `;` at the end.
+#     ```
+#     SEQAN_DEFINITIONS:INTERNAL=-DSEQAN_IGNORE_MISSING_OPENMP=1; -DNOMINMAX;
+#     ```
 file (WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "
 CMAKE_BUILD_TYPE:STRING=${CTEST_BUILD_CONFIGURATION}
 CMAKE_GENERATOR:INTERNAL=${CTEST_CMAKE_GENERATOR}
 CMAKE_GENERATOR_TOOLSET:INTERNAL=${CTEST_CMAKE_GENERATOR_TOOLSET}
+SEQAN_DEFINITIONS:INTERNAL=-DSEQAN_IGNORE_MISSING_OPENMP=1;
 ")
 
 # ------------------------------------------------------------
