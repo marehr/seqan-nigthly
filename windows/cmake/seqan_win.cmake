@@ -90,15 +90,40 @@ if (SEQAN_CTEST_GENERATOR MATCHES "Visual Studio")
     # SEQAN_CTEST_GENERATOR has the name schema Visual Studio 14 2015,
     # Visual Studio 12 2013, or Visual Studio 11 2012
     # Thus match the first digits, e.g. 14, 12, or 11
-    STRING (REGEX REPLACE "Visual Studio ([0-9]+).+" "VS\\1" SEQAN_CTEST_GENERATOR_SHORT "${SEQAN_CTEST_GENERATOR}")
+    STRING (REGEX REPLACE "Visual Studio ([0-9]+).*" "VS\\1" SEQAN_CTEST_GENERATOR_SHORT "${SEQAN_CTEST_GENERATOR}")
   else ()
     message (FATAL_ERROR "Unknown generator ${SEQAN_CTEST_GENERATOR}")
   endif ()
 endif ()
 
+# if a toolset was set, like v140_clang_3_7, Intel C++ Compiler 16.0 or
+# LLVM-vs2014 append the correct version and compiler to
+# SEQAN_CTEST_GENERATOR_SHORT.
+#
+# For example:
+# * v140_clang_3_7 (clang/c2) appends "-clang++/c2-3.7"
+# * Intel C++ Compiler 16.0 (icpc) appends "-icpc-16.0"
+set(SEQAN_COMPILER_VERSION "${SEQAN_CTEST_GENERATOR_SHORT}")
+set(SEQAN_COMPILER "msvc-${SEQAN_COMPILER_VERSION}")
+if (SEQAN_CTEST_GENERATOR_TOOLSET)
+  if (SEQAN_CTEST_GENERATOR_TOOLSET MATCHES "clang")
+    STRING (REGEX REPLACE ".+clang_([0-9_]+).*" "\\1" SEQAN_COMPILER_VERSION "${SEQAN_CTEST_GENERATOR_TOOLSET}")
+    STRING (REGEX REPLACE "_" "." SEQAN_COMPILER_VERSION "${SEQAN_COMPILER_VERSION}")
+    set(SEQAN_CTEST_GENERATOR_SHORT "${SEQAN_CTEST_GENERATOR_SHORT}-clang++/c2-${SEQAN_COMPILER_VERSION}")
+    set(SEQAN_COMPILER "c2-${SEQAN_COMPILER_VERSION}")
+  elseif (SEQAN_CTEST_GENERATOR_TOOLSET MATCHES "Intel")
+    STRING (REGEX REPLACE ".*Intel.*Compiler ([0-9.]+).*" "\\1" SEQAN_COMPILER_VERSION "${SEQAN_CTEST_GENERATOR_TOOLSET}")
+    set(SEQAN_CTEST_GENERATOR_SHORT "${SEQAN_CTEST_GENERATOR_SHORT}-icpc-${SEQAN_COMPILER_VERSION}")
+    set(SEQAN_COMPILER "icc-${SEQAN_COMPILER_VERSION}")
+  else ()
+    message (FATAL_ERROR "Unknown toolset ${SEQAN_CTEST_GENERATOR_TOOLSET}")
+  endif()
+endif()
+
 message (STATUS "SEQAN_CTEST_GENERATOR is ${SEQAN_CTEST_GENERATOR}")
 message (STATUS "SEQAN_CTEST_GENERATOR_SHORT is ${SEQAN_CTEST_GENERATOR_SHORT}")
 set (CTEST_CMAKE_GENERATOR ${SEQAN_CTEST_GENERATOR})
+set (CTEST_CMAKE_GENERATOR_TOOLSET ${SEQAN_CTEST_GENERATOR_TOOLSET})
 
 # ------------------------------------------------------------
 # Set CTest variables with general configuration.
@@ -135,9 +160,9 @@ set (CTEST_SOURCE_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/co-git-${SEQAN_GIT_BR
 message (STATUS "CTEST_SOURCE_DIRECTORY = ${CTEST_SOURCE_DIRECTORY}")
 
 # Set build directory and directory to run tests in.
-set (CTEST_BINARY_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/build-git-${SEQAN_GIT_BRANCH}/${CTEST_BUILD_NAME}")
+set (CTEST_BINARY_DIRECTORY "${SEQAN_CTEST_ROOT_DIRECTORY}/build-git-${SEQAN_GIT_BRANCH}/${SEQAN_COMPILER}")
 set (CTEST_BINARY_TEST_DIRECTORY "${CTEST_BINARY_DIRECTORY}")
-message (STATUS "CTEST_BINARY_DIRECTORY = ${CTEST_SOURCE_DIRECTORY}")
+message (STATUS "CTEST_BINARY_DIRECTORY = ${CTEST_BINARY_DIRECTORY}")
 
 # ------------------------------------------------------------
 # Set CTest variables for programs.
@@ -181,6 +206,7 @@ CTEST_EMPTY_BINARY_DIRECTORY (${CTEST_BINARY_DIRECTORY})
 file (WRITE "${CTEST_BINARY_DIRECTORY}/CMakeCache.txt" "
 CMAKE_BUILD_TYPE:STRING=${CTEST_BUILD_CONFIGURATION}
 CMAKE_GENERATOR:INTERNAL=${CTEST_CMAKE_GENERATOR}
+CMAKE_GENERATOR_TOOLSET:INTERNAL=${CTEST_CMAKE_GENERATOR_TOOLSET}
 ")
 
 # ------------------------------------------------------------
